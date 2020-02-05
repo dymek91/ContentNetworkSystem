@@ -9,7 +9,7 @@ namespace ContentNetworkSystem.Models
     public class Wordpress : Content
     {
         public string XmlRPCUrl { get; set; }
-        public int TextGenerationCategoryId { get; set; }
+        public int? TextGenerationCategoryId { get; set; }
 
         public override void PushContent()
         { 
