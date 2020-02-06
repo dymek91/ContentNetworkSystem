@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Net.Http;
 
 namespace ContentNetworkSystem.Models
 {
@@ -19,7 +20,7 @@ namespace ContentNetworkSystem.Models
 
         public Project Project { get; set; }
 
-        public abstract void PushContent();
+        public abstract void PushContent(IServiceProvider serviceProvider, IHttpClientFactory clientFactory);
 
     }
 }

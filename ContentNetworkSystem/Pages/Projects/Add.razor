@@ -1,0 +1,78 @@
+﻿@page "/Projects/Add"
+
+@attribute [Authorize]
+
+@inject NavigationManager NavigationManager
+@using ContentNetworkSystem.Data
+@using ContentNetworkSystem.Models
+@using ContentNetworkSystem.Models.ViewModels
+@inject IProjectsService projectsService
+@inject IContentsService contentsService
+
+<h3>Add Projects</h3>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model="@projectModel" OnValidSubmit="HandleValidSubmitAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label>
+                    Project Name:
+                    <InputText class="form-control" id="name" @bind-Value="projectModel.Name" />
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    Frequency:
+                    @*<InputDate class="form-control" id="time" @bind-Value="projectModel.Frequency" />*@
+                    <InputNumber type="time" @bind-Value="freqHours" />h
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    Content Type:
+                    <InputSelect class="form-control"  @bind-Value="contentModelTypeName">
+                        @foreach (var content in availableContent.GetContents())
+                        {
+                        <option value=@content.TypeName>@content.TypeName</option>
+                        }
+                    </InputSelect>
+                </label>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Submit</button>
+                <button class="btn btn-danger" @onclick="NavigateToProjects">Cancel</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private Project projectModel = new Project();
+    private AvailableContent availableContent = new AvailableContent();
+    private string contentModelTypeName = "";
+
+    private int freqHours;
+
+    //string TimeProxy { get => projectModel.Frequency.ToString(); set => TimeSpan.TryParse(value,out projectModel.Frequency); }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        Console.WriteLine("OnValidSubmit");
+        projectModel.Frequency = TimeSpan.FromHours(freqHours);
+        Content content = availableContent.GetByTypeName(contentModelTypeName);
+        if(content!=null)
+        {
+            content.Name = content.TypeName;
+            projectModel.Content = content;
+        }
+        await projectsService.AddAsync(projectModel);
+        NavigationManager.NavigateTo("Projects/Index");
+    }
+
+    private void NavigateToProjects()
+    {
+        NavigationManager.NavigateTo("Projects/Index");
+    }
+}

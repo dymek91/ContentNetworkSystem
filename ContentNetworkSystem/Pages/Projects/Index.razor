@@ -1,0 +1,119 @@
+﻿@page "/Projects"
+@page "/Projects/Index"
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize]
+
+@using ContentNetworkSystem.Data
+@using ContentNetworkSystem.Models
+@inject IProjectsService projectsService
+
+<h1>Projects</h1>
+ 
+
+@if (projects == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Group</th>
+                <th>Content</th>
+                <th>Date Added</th>
+                <th>Post Frequency</th>
+                <th>Last Post</th>
+                <th>Is Active</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in projects)
+            {
+            <tr>
+                <td @onclick="@(e => NavigateToDetails(project.ID))">@project.Name</td>
+                @if (project.Group != null)
+                {
+                    <td>@project.Group.Name</td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
+                @if (project.Content != null)
+                {
+                    <td>@project.Content.TypeName</td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
+                <td>@project.DateAdded</td>
+                @if (project.Frequency != null)
+                {
+                    <td>@project.Frequency</td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
+                @if (project.LastPushed != null)
+                {
+                    <td>@project.LastPushed</td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
+                @if (project.Active)
+                {
+                    <td>Active</td>
+                }
+                else
+                {
+                    <td>Disabled</td>
+                }
+                <td><input type="button" class="btn btn-primary" @onclick="@(e => NavigateToEdit(project.ID))" value="Edit" /></td>
+                <td><input type="button" class="btn btn-danger" @onclick="@(e => NavigateToDelete(project.ID))" value="Delete" /></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+<div>
+    <button class="btn btn-primary" @onclick="NavigateToAdd">
+        Add Project
+    </button>
+</div>
+
+
+@code {
+
+    ICollection<Project> projects;
+
+    protected override async Task OnInitializedAsync()
+    {
+        projects = await projectsService.GetAsync();
+    }
+
+    private void NavigateToAdd()
+    {
+        NavigationManager.NavigateTo("Projects/Add");
+    }
+    private void NavigateToEdit(int id)
+    {
+        NavigationManager.NavigateTo("Projects/Edit/" + id);
+    }
+    private void NavigateToDelete(int id)
+    {
+        NavigationManager.NavigateTo("Projects/Delete/" + id);
+    }
+    private void NavigateToDetails(int id)
+    {
+        NavigationManager.NavigateTo("Projects/Details/" + id);
+    }
+}

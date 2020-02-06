@@ -8,9 +8,29 @@ namespace ContentNetworkSystem.Models.ViewModels
 {
     public class AvailableContent
     {
-        public List<Content> GetContents = new List<Content>()
+        private List<Content> _contents;
+        public AvailableContent()
         {
-            new Wordpress() { TypeName = "Wordpress" }
-        };
+            _contents = new List<Content>()
+            {
+                new Wordpress() { TypeName = "Wordpress" }
+            };
+        }
+        public List<Content> GetContents()
+        {
+            return _contents;
+        }
+        public Content GetByTypeName(string typeName)
+        {
+            Content content = null;
+
+            content =  _contents.Find(e => e.TypeName == typeName);
+
+            return content;
+        }
+        //public List<Content> GetContents = new List<Content>()
+        //{
+        //    new Wordpress() { TypeName = "Wordpress" }
+        //};
     }
 }

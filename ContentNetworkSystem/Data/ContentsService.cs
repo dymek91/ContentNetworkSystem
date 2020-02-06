@@ -35,11 +35,11 @@ namespace ContentNetworkSystem.Data
         public async Task DeleteAsync(Content content)
         { 
             _context.Contents.Remove(content);
-            if(await _context.Projects.Where(e => e.ContentId == content.ID).AnyAsync())
-            {
-                var project = await _context.Projects.Where(e => e.ContentId == content.ID).FirstAsync();
-                project.ContentId = null;
-            }
+            //if(await _context.Projects.Where(e => e.ContentId == content.ID).AnyAsync())
+            //{
+            //    var project = await _context.Projects.Where(e => e.ContentId == content.ID).FirstAsync();
+            //    project.ContentId = null;
+            //}
             await _context.SaveChangesAsync();
 
         }

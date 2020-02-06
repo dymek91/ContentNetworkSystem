@@ -33,11 +33,11 @@ namespace ContentNetworkSystem.Data
 
         public async Task DeleteAsync(Project project)
         {
-            if (project.ContentId != null)
-            {
-                var content = await _context.Contents.FindAsync(project.ContentId);
-                _context.Contents.Remove(content);
-            }
+            //if (project.ContentId != null)
+            //{
+            //    var content = await _context.Contents.FindAsync(project.ContentId);
+            //    _context.Contents.Remove(content);
+            //}
             
              _context.Projects.Remove(project);
              await _context.SaveChangesAsync();
