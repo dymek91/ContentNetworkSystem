@@ -1,5 +1,95 @@
-﻿<h3>Edit</h3>
+﻿@page "/Projects/Edit/{projectId:int}"
+
+@attribute [Authorize]
+
+@inject NavigationManager NavigationManager
+@using ContentNetworkSystem.Data
+@using ContentNetworkSystem.Models
+@inject IProjectsService projectsService
+
+<h3>Edit Projects</h3>
+<hr />
+@if (projectModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="@projectModel" OnValidSubmit="HandleValidSubmitAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <button class="btn btn-primary" type="button" @onclick="NavigateToContentEdit">Edit Content</button>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Project Name:
+                        <InputText class="form-control" id="name" @bind-Value="projectModel.Name" />
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Post Frequency:
+                        <InputNumber class="form-control" id="time" @bind-Value="freqHours" />hours
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Active:
+                        <InputCheckbox class="form-control" id="active" @bind-Value="projectModel.Active" />
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <button class="btn btn-danger" type="button" @onclick="NavigateToProjects">Cancel</button>
+                </div>
+
+
+            </EditForm> 
+        </div>
+    </div>
+}
 
 @code {
+    [Parameter]
+    public int ProjectId { get; set; }
+
+    private Project projectModel;
+    private object nameOldValue;
+    private object activeOldValue;
+
+    private int freqHours;
+
+    protected override async Task OnInitializedAsync()
+    {
+        projectModel = await projectsService.GetAsync(ProjectId);
+        freqHours = Convert.ToInt32(projectModel.Frequency.TotalHours);
+        nameOldValue = projectModel.Name;
+        activeOldValue = projectModel.Active;
+    }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        Console.WriteLine("OnValidSubmit");
+        projectModel.Frequency = TimeSpan.FromHours(freqHours);
+        await projectsService.UpdateAsync(projectModel);
+        NavigationManager.NavigateTo("Projects/Index");
+    }
+
+    private void NavigateToProjects()
+    {
+        projectModel.Name = (string)nameOldValue;
+        projectModel.Active = (bool)activeOldValue;
+        NavigationManager.NavigateTo("Projects/Index");
+    }
+
+    private void NavigateToContentEdit()
+    {
+        NavigationManager.NavigateTo("Contents/"+projectModel.Content.TypeName+"/Edit/"+projectModel.Content.ID);
+    }
+
 
 }

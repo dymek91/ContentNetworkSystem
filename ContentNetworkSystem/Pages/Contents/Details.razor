@@ -1,15 +1,15 @@
-﻿@page "/Projects/Details/{projectId:int}"
+﻿@page "/Contents/Details/{contentId:int}"
 
 @attribute [Authorize]
 
 @inject NavigationManager NavigationManager
 @using ContentNetworkSystem.Data
 @using ContentNetworkSystem.Models
-@inject IProjectsService projectsService
+@inject IContentsService contentsService
 
-<h3>Project Details</h3>
+<h3>Content Details</h3>
 <hr />
-@if (projectModel == null)
+@if (contentModel == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -17,13 +17,13 @@ else
 {
     <di>
         <div class="row">
-            @foreach (var property in projectModel.GetType().GetProperties())
+            @foreach (var property in contentModel.GetType().GetProperties())
             {
                 <dt class="col-sm-2">
                     @property.Name
                 </dt>
-                <dd class="col-sm-10">
-                    @property.GetValue(projectModel)
+                <dd class="col-sm-10"> 
+                    @property.GetValue(contentModel) 
                 </dd>
             }
         </div>
@@ -33,13 +33,13 @@ else
 
 @code {
     [Parameter]
-    public int ProjectId { get; set; }
+    public int ContentId { get; set; }
 
-    private Project projectModel;
+    private Content contentModel;
 
     protected override async Task OnInitializedAsync()
     {
-        projectModel = await projectsService.GetAsync(ProjectId);
+        contentModel = await contentsService.GetAsync(ContentId);
     } 
 
     private void NavigateToProject()

@@ -46,7 +46,7 @@ else
                 }
                 @if (project.Content != null)
                 {
-                    <td>@project.Content.TypeName</td>
+                    <td  @onclick="@(e => NavigateToWordpressDetails(project.Content.ID))">@project.Content.TypeName</td>
                 }
                 else
                 {
@@ -115,5 +115,9 @@ else
     private void NavigateToDetails(int id)
     {
         NavigationManager.NavigateTo("Projects/Details/" + id);
+    }
+    private void NavigateToWordpressDetails(int id)
+    {
+        NavigationManager.NavigateTo("Contents/Details/" + id);
     }
 }

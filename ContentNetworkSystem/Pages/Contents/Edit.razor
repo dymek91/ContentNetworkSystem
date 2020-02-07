@@ -1,0 +1,100 @@
+﻿@page "/Contents/Edit/{contentId:int}"
+
+@attribute [Authorize]
+
+@inject NavigationManager NavigationManager
+@using ContentNetworkSystem.Data
+@using ContentNetworkSystem.Models
+@inject IContentsService contentsService
+
+<h3>Edit Content</h3>
+<hr />
+@if (contentModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="@contentModel" OnValidSubmit="HandleValidSubmitAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <label>
+                        Project Name:
+                        <InputText class="form-control" id="name" @bind-Value="contentModel.Name" />
+                    </label>
+                </div>
+                @foreach (var property in contentModel.GetType().GetProperties())
+                {
+                    if (IsNumericType(property.PropertyType))
+                    {
+                        <div class="form-group">
+                            <label>
+                                @property.Name:
+                                <InputNumber class="form-control" id="@property.Name" @bind-Value="contentModel.Name" />
+                            </label>
+                        </div>
+                    }
+                }
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int ContentId { get; set; }
+
+    private Content contentModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        contentModel = await contentsService.GetAsync(ContentId);
+    }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        Console.WriteLine("OnValidSubmit");
+        await contentsService.UpdateAsync(contentModel);
+        NavigationManager.NavigateTo("Projects/Index");
+    }
+
+    private void NavigateToProject()
+    {
+        NavigationManager.NavigateTo("Projects/Edit/"+ contentModel.ProjectId);
+    }
+
+    private bool IsNumericType(Type o)
+    {
+        switch (Type.GetTypeCode(o))
+        {
+            case TypeCode.Byte:
+            case TypeCode.SByte:
+            case TypeCode.UInt16:
+            case TypeCode.UInt32:
+            case TypeCode.UInt64:
+            case TypeCode.Int16:
+            case TypeCode.Int32:
+            case TypeCode.Int64:
+            case TypeCode.Decimal:
+            case TypeCode.Double:
+            case TypeCode.Single:
+                return true;
+            default:
+                return false;
+        }
+    }
+    private bool IsStringType(Type o)
+    {
+        switch (Type.GetTypeCode(o))
+        { 
+            case TypeCode.String:
+                return true;
+            default:
+                return false;
+        }
+    }
+}
+

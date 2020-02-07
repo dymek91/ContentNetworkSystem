@@ -1,5 +1,54 @@
-﻿]<h3>Delete</h3>
+﻿@page "/Projects/Delete/{projectId:int}"
+
+@attribute [Authorize]
+
+@inject NavigationManager NavigationManager
+@using ContentNetworkSystem.Data
+@using ContentNetworkSystem.Models
+@inject IProjectsService projectsService
+
+<h3>Delete Project</h3>
+<hr />
+@if (projectModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <div>
+                <p>Delete @projectModel.Name generator?</p>
+            </div> 
+            <div> 
+                <button class="btn btn-danger" type="button" @onclick="DeleteProjectAsync">Delete</button>
+                <button class="btn btn-primary" type="button" @onclick="NavigateToProjects">Cancel</button>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
+    [Parameter]
+    public int ProjectId { get; set; }
 
+    private Project projectModel;
+     
+
+    protected override async Task OnInitializedAsync()
+    {
+        projectModel = await projectsService.GetAsync(ProjectId); 
+    }
+
+    private async Task DeleteProjectAsync()
+    {
+        Console.WriteLine("OnValidSubmit");
+        await projectsService.DeleteAsync(projectModel);
+        NavigationManager.NavigateTo("Projects/Index");
+    }
+
+    private void NavigateToProjects()
+    {
+        NavigationManager.NavigateTo("Projects/Index");
+    }
 }
