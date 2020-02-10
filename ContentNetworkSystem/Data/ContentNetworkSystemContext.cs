@@ -24,7 +24,7 @@ namespace ContentNetworkSystem.Data
         {
             modelBuilder.Entity<Project>().ToTable("Project")
                 .Property(c => c.DateAdded)
-                .HasDefaultValueSql("getdate()");
+                .HasDefaultValueSql("now()");
             modelBuilder.Entity<Project>()
                   .HasOne(a => a.Content)
                   .WithOne(b => b.Project)

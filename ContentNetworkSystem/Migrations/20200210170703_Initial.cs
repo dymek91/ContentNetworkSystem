@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ContentNetworkSystem.Migrations
 {
@@ -12,7 +13,7 @@ namespace ContentNetworkSystem.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -25,7 +26,7 @@ namespace ContentNetworkSystem.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RequestId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -38,10 +39,10 @@ namespace ContentNetworkSystem.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     GroupId = table.Column<int>(nullable: true),
                     Name = table.Column<string>(nullable: false),
-                    DateAdded = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
+                    DateAdded = table.Column<DateTime>(nullable: false, defaultValueSql: "now()"),
                     Frequency = table.Column<TimeSpan>(nullable: false),
                     LastPushed = table.Column<DateTime>(nullable: false),
                     Active = table.Column<bool>(nullable: false)
@@ -62,7 +63,7 @@ namespace ContentNetworkSystem.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ProjectId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Url = table.Column<string>(nullable: true),

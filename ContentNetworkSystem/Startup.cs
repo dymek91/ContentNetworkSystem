@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using ContentNetworkSystem.Data;
 using ContentNetworkSystem.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.HttpOverrides;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ContentNetworkSystem
 {
@@ -28,9 +30,45 @@ namespace ContentNetworkSystem
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies";
+                options.DefaultChallengeScheme = "oidc";
+            })
+                .AddCookie("Cookies")
+                .AddOpenIdConnect("oidc", options =>
+                {
+                    options.Authority = Configuration.GetValue<string>("AuthorityServer");
+                    options.RequireHttpsMetadata = false;
+
+                    options.ClientId = "CNS";
+                    options.ClientSecret = "7FAEB0A9-301F-4425-ADFE-85062F8D419F";
+                    options.ResponseType = "code";
+
+                    options.SaveTokens = true;
+
+                    options.GetClaimsFromUserInfoEndpoint = true;
+
+                    options.Scope.Add("offline_access");
+                    options.Scope.Add("profile");
+                    options.TokenValidationParameters.NameClaimType = "name";
+                    options.TokenValidationParameters.RoleClaimType = "role";
+
+                })
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = Configuration.GetValue<string>("AuthorityServer");
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters.RoleClaimType = "client_role";
+
+                    options.Audience = "apiContentNetworkSystem";
+                });
+
             services.AddDbContext<ContentNetworkSystemContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(
+                    Configuration.GetConnectionString("DefaultConnection"))); 
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -57,10 +95,18 @@ namespace ContentNetworkSystem
                 app.UseHsts();
             }
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
