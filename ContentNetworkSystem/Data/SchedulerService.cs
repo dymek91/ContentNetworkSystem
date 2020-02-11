@@ -39,6 +39,10 @@ namespace ContentNetworkSystem.Data
                 var projects = await _projectsService.GetAsync();
                 foreach (var project in projects)
                 {
+                    if(!project.Active)
+                    {
+                        continue;
+                    }
                     var currDate = DateTime.UtcNow;
                     var lastPushed = project.LastPushed;
                     if(lastPushed == null)
@@ -50,7 +54,7 @@ namespace ContentNetworkSystem.Data
                     if ((lastPushed + frequency) < currDate)
                     {
                         var content = project.Content;
-                        content.PushContent(_serviceProvider, _httpClientFactory);
+                        await content.PushContent(_serviceProvider, _httpClientFactory);
                         project.LastPushed = currDate;
                         await _projectsService.UpdateAsync(project);
                     }

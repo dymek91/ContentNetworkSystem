@@ -6,6 +6,7 @@
 @using ContentNetworkSystem.Data
 @using ContentNetworkSystem.Models
 @inject IContentsService contentsService
+@inject EncryptionService encryptionService;
 
 <h3>Edit Content</h3>
 <hr />
@@ -40,14 +41,26 @@ else
                 </div>
                 <div class="form-group">
                     <label>
-                        XmlRPCUrl:
-                        <InputText class="form-control" id="XmlRPCUrl" @bind-Value="contentModel.XmlRPCUrl" />
+                        TextGenerationCategoryId:
+                        <InputNumber class="form-control" id="TextGenerationCategoryId" @bind-Value="contentModel.TextGenerationCategoryId" />
                     </label>
                 </div>
                 <div class="form-group">
                     <label>
-                        TextGenerationCategoryId:
-                        <InputNumber class="form-control" id="XmlRPCUrl" @bind-Value="contentModel.TextGenerationCategoryId" />
+                        Username:
+                        <InputText class="form-control" id="Username" @bind-Value="contentModel.Username" />
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Password:
+                        <InputText type="password"  class="form-control" id="Password" @bind-Value="password" />
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Blog Id:
+                        <InputNumber class="form-control" id="BlogId" @bind-Value="contentModel.BlogId" />
                     </label>
                 </div>
                 <div class="form-group">
@@ -64,15 +77,25 @@ else
     public int ContentId { get; set; }
 
     private Wordpress contentModel;
+    private string password="";
 
     protected override async Task OnInitializedAsync()
     {
         contentModel = (Wordpress) await contentsService.GetAsync(ContentId);
+        try
+        {
+            password = encryptionService.DecryptString(contentModel.Password);
+        }
+        catch
+        {
+            Console.WriteLine("error decrypting password");
+        }
     }
 
     private async Task HandleValidSubmitAsync()
     {
         Console.WriteLine("OnValidSubmit");
+        contentModel.Password = encryptionService.EncryptString(password);
         await contentsService.UpdateAsync(contentModel);
         NavigationManager.NavigateTo("Projects/Index");
     }
@@ -80,6 +103,6 @@ else
     private void NavigateToProject()
     {
         NavigationManager.NavigateTo("Projects/Edit/" + contentModel.ProjectId);
-    } 
+    }
 }
 

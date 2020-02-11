@@ -13,7 +13,7 @@ namespace ContentNetworkSystem.Models.ViewModels
         {
             _contents = new List<Content>()
             {
-                new Wordpress() { TypeName = "Wordpress" }
+                new Wordpress() { TypeName = "Wordpress", BlogId = 1 }
             };
         }
         public List<Content> GetContents()

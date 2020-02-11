@@ -16,11 +16,9 @@ namespace ContentNetworkSystem.Models
                 serviceProvider.GetRequiredService<
                     DbContextOptions<ContentNetworkSystemContext>>()))
             {
-                if(context.Schedulers.Count() >1)
-                {
-                    context.Schedulers.RemoveRange(context.Schedulers);
-                    context.SaveChanges();
-                }
+                context.Schedulers.RemoveRange(context.Schedulers);
+                context.SaveChanges();
+
                 if(!context.Schedulers.Any())
                 {
                     var scheduler = new Scheduler { RequestId = null};

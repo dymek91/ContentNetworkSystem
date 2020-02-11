@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ContentNetworkSystem.Data;
+using ContentNetworkSystem.Push;
+using ContentNetworkSystem.Pull;
 using ContentNetworkSystem.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -75,10 +77,18 @@ namespace ContentNetworkSystem
             services.AddSingleton<WeatherForecastService>(); 
             services.AddHttpClient();
 
+            services.AddTransient<EncryptionService>();
+
             services.AddTransient<IContentsService, ContentsService>();
             services.AddTransient<IGroupsService, GroupsService>();
             services.AddTransient<IProjectsService, ProjectsService>();
             services.AddTransient<SchedulerService>();
+
+            //push
+            services.AddTransient<WordpressService>();
+
+            //pull
+            services.AddTransient<TextGenerationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

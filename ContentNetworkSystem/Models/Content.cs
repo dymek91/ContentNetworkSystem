@@ -20,7 +20,7 @@ namespace ContentNetworkSystem.Models
 
         public Project Project { get; set; }
 
-        public abstract void PushContent(IServiceProvider serviceProvider, IHttpClientFactory clientFactory);
+        public abstract Task PushContent(IServiceProvider serviceProvider, IHttpClientFactory clientFactory);
 
     }
 }
