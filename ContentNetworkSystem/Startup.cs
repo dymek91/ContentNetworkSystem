@@ -16,6 +16,9 @@ using ContentNetworkSystem.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.HttpOverrides;
 using System.IdentityModel.Tokens.Jwt;
+using Google.Cloud.Diagnostics.AspNetCore;
+using Google.Cloud.Diagnostics.Common;
+using Microsoft.Extensions.Logging;
 
 namespace ContentNetworkSystem
 {
@@ -32,6 +35,14 @@ namespace ContentNetworkSystem
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddGoogleExceptionLogging(options =>
+            {
+                options.ProjectId = "dymekapps";
+                options.ServiceName = "ContentNetworkSystem";
+                options.Version = "0.01";
+                //  options.Options = errorOptions; 
+            });
+
             JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
             services.AddAuthentication(options =>
@@ -92,7 +103,7 @@ namespace ContentNetworkSystem
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -109,6 +120,13 @@ namespace ContentNetworkSystem
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor
             });
+
+            // Configure logging service.
+            LoggerOptions loggerOptions = LoggerOptions.Create(logName: "ContentNetworkSystem");
+
+            loggerFactory.AddGoogle(app.ApplicationServices, "dymekapps", loggerOptions);
+
+            app.UseGoogleExceptionLogging();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
