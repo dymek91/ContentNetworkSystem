@@ -7,6 +7,8 @@ using ContentNetworkSystem.Data;
 using ContentNetworkSystem.Models;
 using Microsoft.EntityFrameworkCore;
 using Z.EntityFramework.Plus;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace ContentNetworkSystem.Data
 {
@@ -16,21 +18,23 @@ namespace ContentNetworkSystem.Data
         private IProjectsService  _projectsService;
         private IServiceProvider _serviceProvider;
         private IHttpClientFactory _httpClientFactory;
+        private ILogger<SchedulerService> _logger;
 
-        public SchedulerService(ContentNetworkSystemContext context, IProjectsService projectsService, IServiceProvider serviceProvider, IHttpClientFactory httpClientFactory)
+        public SchedulerService(ContentNetworkSystemContext context, IProjectsService projectsService, IServiceProvider serviceProvider, IHttpClientFactory httpClientFactory, ILogger<SchedulerService> logger)
         {
             _context = context;
             _projectsService = projectsService;
             _serviceProvider = serviceProvider;
             _httpClientFactory = httpClientFactory;
+            _logger = logger;
         }
 
         public async Task ProcessProjectsAsync()
         {
-            Console.WriteLine("SchedulerService: Processing Projects.");
+            _logger.LogInformation("Processing Projects.");
             if (!await LockAsync())
             {
-                Console.WriteLine("SchedulerService: Can't lock.");
+                _logger.LogWarning("Can't lock.");
                 return;
             }
 
@@ -54,7 +58,14 @@ namespace ContentNetworkSystem.Data
                     if ((lastPushed + frequency) < currDate)
                     {
                         var content = project.Content;
-                        await content.PushContent(_serviceProvider, _httpClientFactory);
+                        try
+                        {
+                            await content.PushContent(_serviceProvider, _httpClientFactory);
+                        }
+                        catch(Exception e)
+                        {
+                            _logger.LogError("Message: {Message} | StackTrace: {StackTrace}", e.Message, e.StackTrace);
+                        }
                         project.LastPushed = currDate;
                         await _projectsService.UpdateAsync(project);
                     }
@@ -62,9 +73,7 @@ namespace ContentNetworkSystem.Data
             }
             catch(Exception e)
             {
-                Console.WriteLine("Error in SchedulerService::ProcessProjectsAsync");
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.StackTrace);
+                _logger.LogError("Message: {Message} | StackTrace: {StackTrace}", e.Message, e.StackTrace);
             }
 
             await UnlockAsync();
