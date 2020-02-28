@@ -17,6 +17,7 @@ namespace ContentNetworkSystem.Models
         public DateTime DateAdded { get; set; }
         public TimeSpan Frequency { get; set; }
         public DateTime LastPushed { get; set; }
+        public bool? WasSuccess { get; set; } = true;
         public bool Active { get; set; } = false;
 
         public Content Content { get; set; }

@@ -7,6 +7,12 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200211203301_ProjectNoActiveDefault.cs" />
     <Compile Remove="Migrations\20200211203301_ProjectNoActiveDefault.Designer.cs" />
+    <Compile Remove="Migrations\20200228150346_AddedWasSuccess.cs" />
+    <Compile Remove="Migrations\20200228150346_AddedWasSuccess.Designer.cs" />
+    <Compile Remove="Migrations\20200228150855_AddedWasSuccess.cs" />
+    <Compile Remove="Migrations\20200228150855_AddedWasSuccess.Designer.cs" />
+    <Compile Remove="Migrations\20200228151505_AddedWasSuccess.cs" />
+    <Compile Remove="Migrations\20200228151505_AddedWasSuccess.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -26,6 +26,9 @@ namespace ContentNetworkSystem.Data
                 .Property(c => c.DateAdded)
                 .HasDefaultValueSql("now()");
             modelBuilder.Entity<Project>()
+                .Property(c => c.WasSuccess)
+                .HasDefaultValue(true);
+            modelBuilder.Entity<Project>()
                   .HasOne(a => a.Content)
                   .WithOne(b => b.Project)
                   .HasForeignKey<Content>(b => b.ProjectId);

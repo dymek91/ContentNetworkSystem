@@ -26,6 +26,7 @@ else
                 <th>Date Added</th>
                 <th>Post Frequency</th>
                 <th>Last Post</th>
+                <th>Was Success</th>
                 <th>Is Active</th>
                 <th>Edit</th>
                 <th>Delete</th>
@@ -46,7 +47,7 @@ else
                 }
                 @if (project.Content != null)
                 {
-                    <td  @onclick="@(e => NavigateToWordpressDetails(project.Content.ID))">@project.Content.TypeName</td>
+                    <td @onclick="@(e => NavigateToWordpressDetails(project.Content.ID))">@project.Content.TypeName</td>
                 }
                 else
                 {
@@ -64,6 +65,14 @@ else
                 @if (project.LastPushed != null)
                 {
                     <td>@project.LastPushed</td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
+                @if (project.WasSuccess.HasValue)
+                {
+                    <td>@(project.WasSuccess.Value ? "Success" : "Failed")</td>
                 }
                 else
                 {

@@ -58,6 +58,7 @@ namespace ContentNetworkSystem.Data
                     if ((lastPushed + frequency) < currDate)
                     {
                         var content = project.Content;
+                        project.WasSuccess = true;
                         try
                         {
                             await content.PushContent(_serviceProvider, _httpClientFactory);
@@ -65,6 +66,7 @@ namespace ContentNetworkSystem.Data
                         catch(Exception e)
                         {
                             _logger.LogError("Message: {Message} | StackTrace: {StackTrace}", e.Message, e.StackTrace);
+                            project.WasSuccess = false;
                         }
                         project.LastPushed = currDate;
                         await _projectsService.UpdateAsync(project);
