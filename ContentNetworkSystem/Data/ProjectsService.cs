@@ -9,7 +9,7 @@ namespace ContentNetworkSystem.Data
 {
     public interface IProjectsService
     {
-        Task<List<Project>> GetAsync();
+        Task<List<Project>> GetAsync(bool? wasSuccess = null, bool? active = null);
         Task<Project> GetAsync(int projectId);
         Task<Project> AddAsync(Project project);
         Task<Project> UpdateAsync(Project project);
@@ -44,10 +44,21 @@ namespace ContentNetworkSystem.Data
             
         }
 
-        public async Task<List<Project>> GetAsync()
+        public async Task<List<Project>> GetAsync(bool? wasSuccess=null,bool? active=null)
         {
-            var projects = await _context.Projects.ToListAsync();
-            foreach(var project in projects)
+            //var projects = await _context.Projects.ToListAsync();
+            //var projects =  _context.Projects;
+            //var projects = from m in _context.Projects
+            //               select m;
+
+            var projectsQuery = from m in _context.Projects select m;
+
+            if (wasSuccess.HasValue) projectsQuery = projectsQuery.Where(e => e.WasSuccess == wasSuccess.Value);
+            if (active.HasValue) projectsQuery = projectsQuery.Where(e => e.Active == active.Value);
+
+            var projects = await projectsQuery.ToListAsync();
+
+            foreach (var project in projects)
             {
                 await _context.Entry(project).Reference(e => e.Content).LoadAsync();
                 await _context.Entry(project).Reference(e => e.Group).LoadAsync();

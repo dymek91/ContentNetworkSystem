@@ -6,10 +6,11 @@
 
 @using ContentNetworkSystem.Data
 @using ContentNetworkSystem.Models
+@using ContentNetworkSystem.Models.ViewModels
 @inject IProjectsService projectsService
 
 <h1>Projects</h1>
- 
+
 
 @if (projects == null)
 {
@@ -17,6 +18,26 @@
 }
 else
 {
+    <EditForm Model="@viewModel">
+        <div class="form-group">
+            <label class="col-form-label">
+                Was Success:
+                <InputSelect class="form-control" @bind-Value="viewModel.Filters.WasSuccess" @oninput="@(args => OnWasSuccessChange(args))" type="text">
+                    <option value="null">All</option>
+                    <option value="true">Success</option>
+                    <option value="false">Failed</option>
+                </InputSelect>
+            </label>
+            <label class="col-form-label">
+                Active:
+                <InputSelect class="form-control" @bind-Value="viewModel.Filters.Active" @oninput="@(args => OnActiveChange(args))" type="text">
+                    <option value="null">All</option>
+                    <option value="true">Active</option>
+                    <option value="false">Disabled</option>
+                </InputSelect>
+            </label>
+        </div>
+    </EditForm>
     <table class="table">
         <thead>
             <tr>
@@ -35,60 +56,60 @@ else
         <tbody>
             @foreach (var project in projects)
             {
-            <tr>
-                <td @onclick="@(e => NavigateToDetails(project.ID))">@project.Name</td>
-                @if (project.Group != null)
-                {
-                    <td>@project.Group.Name</td>
-                }
-                else
-                {
-                    <td>None</td>
-                }
-                @if (project.Content != null)
-                {
-                    <td @onclick="@(e => NavigateToWordpressDetails(project.Content.ID))">@project.Content.TypeName</td>
-                }
-                else
-                {
-                    <td>None</td>
-                }
-                <td>@project.DateAdded</td>
-                @if (project.Frequency != null)
-                {
-                    <td>@project.Frequency</td>
-                }
-                else
-                {
-                    <td>None</td>
-                }
-                @if (project.LastPushed != null)
-                {
-                    <td>@project.LastPushed</td>
-                }
-                else
-                {
-                    <td>None</td>
-                }
-                @if (project.WasSuccess.HasValue)
-                {
-                    <td>@(project.WasSuccess.Value ? "Success" : "Failed")</td>
-                }
-                else
-                {
-                    <td>None</td>
-                }
-                @if (project.Active)
-                {
-                    <td>Active</td>
-                }
-                else
-                {
-                    <td>Disabled</td>
-                }
-                <td><input type="button" class="btn btn-primary" @onclick="@(e => NavigateToEdit(project.ID))" value="Edit" /></td>
-                <td><input type="button" class="btn btn-danger" @onclick="@(e => NavigateToDelete(project.ID))" value="Delete" /></td>
-            </tr>
+                <tr>
+                    <td @onclick="@(e => NavigateToDetails(project.ID))">@project.Name</td>
+                    @if (project.Group != null)
+                    {
+                        <td>@project.Group.Name</td>
+                    }
+                    else
+                    {
+                        <td>None</td>
+                    }
+                    @if (project.Content != null)
+                    {
+                        <td @onclick="@(e => NavigateToWordpressDetails(project.Content.ID))">@project.Content.TypeName</td>
+                    }
+                    else
+                    {
+                        <td>None</td>
+                    }
+                    <td>@project.DateAdded</td>
+                    @if (project.Frequency != null)
+                    {
+                        <td>@project.Frequency</td>
+                    }
+                    else
+                    {
+                        <td>None</td>
+                    }
+                    @if (project.LastPushed != null)
+                    {
+                        <td>@project.LastPushed</td>
+                    }
+                    else
+                    {
+                        <td>None</td>
+                    }
+                    @if (project.WasSuccess.HasValue)
+                    {
+                        <td>@(project.WasSuccess.Value ? "Success" : "Failed")</td>
+                    }
+                    else
+                    {
+                        <td>None</td>
+                    }
+                    @if (project.Active)
+                    {
+                        <td>Active</td>
+                    }
+                    else
+                    {
+                        <td>Disabled</td>
+                    }
+                    <td><input type="button" class="btn btn-primary" @onclick="@(e => NavigateToEdit(project.ID))" value="Edit" /></td>
+                    <td><input type="button" class="btn btn-danger" @onclick="@(e => NavigateToDelete(project.ID))" value="Delete" /></td>
+                </tr>
             }
         </tbody>
     </table>
@@ -103,6 +124,8 @@ else
 @code {
 
     ICollection<Project> projects;
+
+    ProjectsViewModel viewModel = new ProjectsViewModel();
 
     protected override async Task OnInitializedAsync()
     {
@@ -129,4 +152,32 @@ else
     {
         NavigationManager.NavigateTo("Contents/Details/" + id);
     }
+
+
+    private async Task OnWasSuccessChange(ChangeEventArgs args)
+    {
+        viewModel.Filters.WasSuccess = (string)args.Value;
+
+        await ViewChange();
+    }
+
+    private async Task OnActiveChange(ChangeEventArgs args)
+    {
+        viewModel.Filters.Active = (string)args.Value;
+
+        await ViewChange();
+    }
+
+    private async Task ViewChange()
+    {
+        Console.WriteLine("WasSuccess: {0} | Active: {1}", viewModel.Filters.WasSuccess, viewModel.Filters.Active);
+
+        projects = await projectsService.GetAsync(
+                wasSuccess: viewModel.Filters.GetWasSuccess(),
+                active: viewModel.Filters.GetActive());
+
+        StateHasChanged();
+    }
+
+
 }
