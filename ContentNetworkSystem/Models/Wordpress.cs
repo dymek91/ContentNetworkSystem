@@ -18,6 +18,11 @@ namespace ContentNetworkSystem.Models
         public string Username { get; set; }
         public string Password { get; set; }
 
+        public override void EncryptPassword(EncryptionService encryptionService)
+        {
+            Password = encryptionService.EncryptString(Password);
+        }
+
         public override async  Task PushContent(IServiceProvider serviceProvider, IHttpClientFactory clientFactory)
         { 
             Console.WriteLine("Pushing wordpress content");

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.Http;
+//using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace ContentNetworkSystem.Models
 {
@@ -18,9 +20,11 @@ namespace ContentNetworkSystem.Models
         public string Url { get; set; }
         public string TypeName { get; set; }
 
+        [JsonIgnore]
         public Project Project { get; set; }
 
         public abstract Task PushContent(IServiceProvider serviceProvider, IHttpClientFactory clientFactory);
+        public abstract void EncryptPassword(EncryptionService encryptionService);
 
     }
 }

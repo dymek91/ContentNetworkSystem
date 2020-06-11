@@ -19,6 +19,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Google.Cloud.Diagnostics.AspNetCore;
 using Google.Cloud.Diagnostics.Common;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace ContentNetworkSystem
 {
@@ -83,7 +84,13 @@ namespace ContentNetworkSystem
                 options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection"))); 
 
-            services.AddRazorPages();
+            services.AddRazorPages().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                  {
+                      options.SerializerSettings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Objects;
+                      options.SerializerSettings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
+                      options.SerializerSettings.SerializationBinder = new MyCustomSerializationBinder();
+                   });
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>(); 
             services.AddHttpClient();
