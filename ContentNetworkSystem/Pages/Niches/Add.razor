@@ -1,0 +1,46 @@
+﻿@page "/Niches/Add"
+
+@attribute [Authorize]
+
+@inject NavigationManager NavigationManager
+@using ContentNetworkSystem.Data
+@using ContentNetworkSystem.Models
+@using ContentNetworkSystem.Models.ViewModels
+@inject INichesService nichesService 
+
+<h3>Add Projects</h3>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model="@nicheModel" OnValidSubmit="HandleValidSubmitAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label>
+                    Niche Name:
+                    <InputText class="form-control" id="name" @bind-Value="nicheModel.Name" />
+                </label>
+            </div> 
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Submit</button>
+                <button class="btn btn-danger" @onclick="NavigateToNiches">Cancel</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private Niche nicheModel = new Niche();   
+
+    private async Task HandleValidSubmitAsync()
+    {
+        Console.WriteLine("OnValidSubmit");  
+        await nichesService.AddAsync(nicheModel);
+        NavigationManager.NavigateTo("Niches/Index");
+    }
+
+    private void NavigateToNiches()
+    {
+        NavigationManager.NavigateTo("Niches/Index");
+    }
+}

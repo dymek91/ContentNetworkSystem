@@ -100,6 +100,8 @@ namespace ContentNetworkSystem
             services.AddTransient<IContentsService, ContentsService>();
             services.AddTransient<IGroupsService, GroupsService>();
             services.AddTransient<IProjectsService, ProjectsService>();
+            services.AddTransient<INichesService, NichesService>();
+            services.AddTransient<IKeywordsService, KeywordsService>();
             services.AddTransient<SchedulerService>();
 
             //push

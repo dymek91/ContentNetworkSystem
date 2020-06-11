@@ -1,0 +1,54 @@
+﻿@page "/Keywords/Delete/{keywordId:int}"
+
+@attribute [Authorize]
+
+@inject NavigationManager NavigationManager
+@using ContentNetworkSystem.Data
+@using ContentNetworkSystem.Models
+@inject IKeywordsService keywordsService
+
+<h3>Delete Keyword</h3>
+<hr />
+@if (keywordModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <div>
+                <p>Delete @keywordModel.Name keyword?</p>
+            </div>
+            <div>
+                <button class="btn btn-danger" type="button" @onclick="DeleteKeywordAsync">Delete</button>
+                <button class="btn btn-primary" type="button" @onclick="NavigateToKeywords">Cancel</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int KeywordId { get; set; }
+
+    private Keyword keywordModel;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        keywordModel = await keywordsService.GetAsync(KeywordId);
+    }
+
+    private async Task DeleteKeywordAsync()
+    {
+        Console.WriteLine("OnValidSubmit");
+        await keywordsService.DeleteAsync(keywordModel);
+        NavigationManager.NavigateTo("Niches/Edit/" + keywordModel.NicheId.ToString());
+    }
+
+    private void NavigateToKeywords()
+    {
+        NavigationManager.NavigateTo("Niches/Edit/" + keywordModel.NicheId.ToString());
+    }
+}

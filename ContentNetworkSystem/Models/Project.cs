@@ -11,6 +11,7 @@ namespace ContentNetworkSystem.Models
     {
         public int ID { get; set; } 
         public int? GroupId { get; set; }
+        public int? NicheId { get; set; }
         [Required]
         public string Name { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -22,5 +23,7 @@ namespace ContentNetworkSystem.Models
 
         public Content Content { get; set; }
         public Group Group { get; set; }
+
+        public Niche Niche { get; set; }
     }
 }

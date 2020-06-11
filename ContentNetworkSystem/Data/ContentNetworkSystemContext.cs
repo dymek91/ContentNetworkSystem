@@ -19,6 +19,8 @@ namespace ContentNetworkSystem.Data
         public DbSet<Scheduler> Schedulers { get; set; }
         public DbSet<Content> Contents { get; set; }
         public DbSet<Wordpress> Wordpresses { get; set; }
+        public DbSet<Niche> Niches { get; set; }
+        public DbSet<Keyword> Keywords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +39,12 @@ namespace ContentNetworkSystem.Data
                 .IsUnique(); 
             modelBuilder.Entity<Scheduler>().ToTable("Scheduler");
             modelBuilder.Entity<Content>().ToTable("Content");
+            modelBuilder.Entity<Niche>().ToTable("Niche")
+                .HasIndex(e => e.Name)
+                .IsUnique();
+            modelBuilder.Entity<Keyword>().ToTable("Keyword")
+                .HasIndex(e => new { e.NicheId, e.Name })
+                .IsUnique();
         }
     }
 }

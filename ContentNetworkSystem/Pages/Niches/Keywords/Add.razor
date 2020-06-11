@@ -1,0 +1,84 @@
+﻿@page "/Keywords/Add/{nicheId:int}"
+
+@attribute [Authorize]
+
+@inject NavigationManager NavigationManager
+@using ContentNetworkSystem.Data
+@using ContentNetworkSystem.Models
+@using System.ComponentModel.DataAnnotations
+@inject IKeywordsService keywordsService
+@inject INichesService nichesService
+
+@if (nicheModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h3>Add Keywords to @nicheModel.Name</h3>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="@textAreaModel" OnValidSubmit="HandleValidSubmitAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <label>
+                        Keywords to add (one per line):
+                        <InputTextArea class="form-control" id="name" @bind-Value="textAreaModel.TextArea" />
+                    </label>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <button class="btn btn-danger" @onclick="NavigateToNiche">Cancel</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int NicheId { get; set; }
+
+    private TextAreaHandler textAreaModel = new TextAreaHandler();
+
+    private Niche nicheModel = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        nicheModel = await nichesService.GetAsync(NicheId);
+    }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        Console.WriteLine("OnValidSubmit");
+        foreach (var keywordStr in textAreaModel.GetLines())
+        {
+            Keyword keyword = new Keyword()
+            {
+                NicheId = NicheId,
+                Name = keywordStr
+            };
+            await keywordsService.AddAsync(keyword);
+        }
+        NavigationManager.NavigateTo("Niches/Edit/" + NicheId);
+    }
+
+    private void NavigateToNiche()
+    {
+        NavigationManager.NavigateTo("Niches/Edit/" + NicheId);
+    }
+
+    class TextAreaHandler
+    {
+        [Required]
+        public string TextArea { get; set; }
+
+        public List<string> GetLines()
+        {
+            var result = TextArea.Split(new[] { '\r', '\n' });
+            return result.ToList();
+        }
+    }
+}

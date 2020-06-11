@@ -6,6 +6,7 @@
 @using ContentNetworkSystem.Data
 @using ContentNetworkSystem.Models
 @inject IProjectsService projectsService
+@inject INichesService nichesService
 
 <h3>Edit Projects</h3>
 <hr />
@@ -37,6 +38,25 @@ else
                 </div>
                 <div class="form-group">
                     <label>
+                        Niche:
+                        @if (niches == null)
+                        {
+                            <InputSelect class="form-control" @bind-Value="nicheId" disabled></InputSelect>
+                        }
+                        else
+                        {
+                    <InputSelect class="form-control" @bind-Value="nicheId" @oninput="@(args => OnNicheChange(args))" type="text">
+                        <option value="None">None</option>
+                        @foreach (var niche in niches)
+                                {
+                            <option value=@niche.ID.ToString()>@niche.ID.ToString() : @niche.Name</option>
+                                }
+                    </InputSelect>
+                        }
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
                         Active:
                         <InputCheckbox class="form-control" id="active" @bind-Value="projectModel.Active" />
                     </label>
@@ -63,12 +83,16 @@ else
 
     private int freqHours;
 
+    ICollection<Niche> niches;
+    string  nicheId;
+
     protected override async Task OnInitializedAsync()
     {
         projectModel = await projectsService.GetAsync(ProjectId);
         freqHours = Convert.ToInt32(projectModel.Frequency.TotalHours);
         nameOldValue = projectModel.Name;
         activeOldValue = projectModel.Active;
+        niches = await nichesService.GetAsync();
     }
 
     private async Task HandleValidSubmitAsync()
@@ -90,6 +114,17 @@ else
     {
         NavigationManager.NavigateTo("Contents/"+projectModel.Content.TypeName+"/Edit/"+projectModel.Content.ID);
     }
-
+    private async Task OnNicheChange(ChangeEventArgs args)
+    {
+        Console.WriteLine("OnNicheChange");
+        if ((string)args.Value == "None")
+        {
+            projectModel.NicheId = null;
+        }
+        else
+        {
+            projectModel.NicheId = int.Parse((string)args.Value);
+        }
+    }
 
 }

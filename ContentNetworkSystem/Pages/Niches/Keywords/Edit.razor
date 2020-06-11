@@ -1,0 +1,67 @@
+﻿@page "/Keywords/Edit/{keywordId:int}"
+
+@attribute [Authorize]
+
+@inject NavigationManager NavigationManager
+@using ContentNetworkSystem.Data
+@using ContentNetworkSystem.Models
+@inject IKeywordsService keywordsService
+
+<h3>Edit Keyword</h3>
+<hr />
+@if (keywordModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="@keywordModel" OnValidSubmit="HandleValidSubmitAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <label>
+                        Niche Name:
+                        <InputText class="form-control" id="name" @bind-Value="keywordModel.Name" />
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <button class="btn btn-danger" type="button" @onclick="NavigateToKeywords">Cancel</button>
+                </div>
+
+
+            </EditForm>
+        </div>
+    </div> 
+}
+
+@code {
+    [Parameter]
+    public int KeywordId { get; set; }
+
+    private Keyword keywordModel;
+    private object nameOldValue;
+
+    protected override async Task OnInitializedAsync()
+    {
+        keywordModel = await keywordsService.GetAsync(KeywordId);
+        nameOldValue = keywordModel.Name;
+    }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        Console.WriteLine("OnValidSubmit");
+        await keywordsService.UpdateAsync(keywordModel);
+        NavigationManager.NavigateTo("Niches/Edit/"+ keywordModel.NicheId.ToString());
+    }
+
+    private void NavigateToKeywords()
+    {
+        keywordModel.Name = (string)nameOldValue;
+        NavigationManager.NavigateTo("Niches/Edit/"+keywordModel.NicheId.ToString());
+    }
+
+}

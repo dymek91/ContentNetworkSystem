@@ -1,0 +1,83 @@
+﻿@page "/Niches"
+@page "/Niches/Index"
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize]
+
+@using ContentNetworkSystem.Data
+@using ContentNetworkSystem.Models
+@using ContentNetworkSystem.Models.ViewModels
+@inject INichesService nichesService
+
+<h1>Niches</h1>
+
+
+@if (niches == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var niche in niches)
+            {
+            <tr>
+                <td>@niche.ID</td>
+                <td @onclick="@(e => NavigateToDetails(niche.ID))">@niche.Name</td>
+                <td><input type="button" class="btn btn-primary" @onclick="@(e => NavigateToEdit(niche.ID))" value="Edit" /></td>
+                <td><input type="button" class="btn btn-danger" @onclick="@(e => NavigateToDelete(niche.ID))" value="Delete" /></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+<div>
+    <button class="btn btn-primary" @onclick="NavigateToAdd">
+        Add Niche
+    </button>
+</div>
+
+
+@code {
+
+    ICollection<Niche> niches;
+
+    ProjectsViewModel viewModel = new ProjectsViewModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        niches = await nichesService.GetAsync();
+    }
+
+    private void NavigateToAdd()
+    {
+        NavigationManager.NavigateTo("Niches/Add");
+    }
+    private void NavigateToEdit(int id)
+    {
+        NavigationManager.NavigateTo("Niches/Edit/" + id);
+    }
+    private void NavigateToDelete(int id)
+    {
+        NavigationManager.NavigateTo("Niches/Delete/" + id);
+    }
+    private void NavigateToDetails(int id)
+    {
+        NavigationManager.NavigateTo("Niches/Details/" + id);
+    }
+    private void NavigateToWordpressDetails(int id)
+    {
+        NavigationManager.NavigateTo("Contents/Details/" + id);
+    } 
+
+
+}

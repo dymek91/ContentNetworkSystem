@@ -1,0 +1,54 @@
+﻿@page "/Niches/Delete/{nicheId:int}"
+
+@attribute [Authorize]
+
+@inject NavigationManager NavigationManager
+@using ContentNetworkSystem.Data
+@using ContentNetworkSystem.Models
+@inject INichesService nichesService
+
+<h3>Delete Niche</h3>
+<hr />
+@if (nicheModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <div>
+                <p>Delete @nicheModel.Name niche?</p>
+            </div>
+            <div>
+                <button class="btn btn-danger" type="button" @onclick="DeleteNicheAsync">Delete</button>
+                <button class="btn btn-primary" type="button" @onclick="NavigateToNiches">Cancel</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int NicheId { get; set; }
+
+    private Niche nicheModel;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        nicheModel = await nichesService.GetAsync(NicheId);
+    }
+
+    private async Task DeleteNicheAsync()
+    {
+        Console.WriteLine("OnValidSubmit");
+        await nichesService.DeleteAsync(nicheModel);
+        NavigationManager.NavigateTo("Niches/Index");
+    }
+
+    private void NavigateToNiches()
+    {
+        NavigationManager.NavigateTo("Niches/Index");
+    }
+}

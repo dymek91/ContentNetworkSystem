@@ -1,0 +1,122 @@
+﻿@page "/Niches/Edit/{nicheId:int}"
+
+@attribute [Authorize]
+
+@inject NavigationManager NavigationManager
+@using ContentNetworkSystem.Data
+@using ContentNetworkSystem.Models
+@inject INichesService nichesService
+
+<h3>Edit Niche</h3>
+<hr />
+@if (nicheModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="@nicheModel" OnValidSubmit="HandleValidSubmitAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <label>
+                        Niche Name:
+                        <InputText class="form-control" id="name" @bind-Value="nicheModel.Name" />
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <button class="btn btn-danger" type="button" @onclick="NavigateToNiches">Cancel</button>
+                </div>
+
+
+            </EditForm>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>
+                    Keywords:
+                </label>
+                @if (keywords == null)
+                {<p><em>Loading...</em></p>}
+                else
+                {
+                    <table>
+                        <tbody>
+                            @foreach (ContentNetworkSystem.Models.Keyword keyword in keywords)
+                            {
+                                <tr>
+                                    <td>@keyword.Name</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" @onclick="@(e => NavigateToKeywordEdit(keyword.ID))" type="button">Edit</button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm" @onclick="@(e => NavigateToKeywordDelete(keyword.ID))" type="button">Delete</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="button" @onclick="NavigateToKeywordsAdd">Add Keywords</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int NicheId { get; set; }
+
+    private Niche nicheModel;
+    private object nameOldValue;
+    private object activeOldValue;
+    private List<ContentNetworkSystem.Models.Keyword> keywords;
+
+    protected override async Task OnInitializedAsync()
+    {
+        nicheModel = await nichesService.GetAsync(NicheId);
+        keywords = await nichesService.GetKeywordsAsync(nicheModel);
+        nameOldValue = nicheModel.Name;
+    }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        Console.WriteLine("OnValidSubmit");
+        await nichesService.UpdateAsync(nicheModel);
+        NavigationManager.NavigateTo("Niches/Index");
+    }
+
+    private void NavigateToNiches()
+    {
+        nicheModel.Name = (string)nameOldValue;
+        NavigationManager.NavigateTo("Niches/Index");
+    }
+
+    private void NavigateToKeywordsAdd()
+    {
+        nicheModel.Name = (string)nameOldValue;
+        NavigationManager.NavigateTo("Keywords/Add/" + NicheId);
+    }
+
+    private void NavigateToKeywordEdit(int keywordId)
+    {
+        nicheModel.Name = (string)nameOldValue;
+        NavigationManager.NavigateTo("Keywords/Edit/" + keywordId);
+    }
+
+    private void NavigateToKeywordDelete(int keywordId)
+    {
+        nicheModel.Name = (string)nameOldValue;
+        NavigationManager.NavigateTo("Keywords/Delete/" + keywordId);
+    }
+
+}

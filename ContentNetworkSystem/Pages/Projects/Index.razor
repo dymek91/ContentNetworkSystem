@@ -42,6 +42,7 @@ else
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Niche</th>
                 <th>Group</th>
                 <th>Content</th>
                 <th>Date Added</th>
@@ -56,60 +57,68 @@ else
         <tbody>
             @foreach (var project in projects)
             {
-                <tr>
-                    <td @onclick="@(e => NavigateToDetails(project.ID))">@project.Name</td>
-                    @if (project.Group != null)
-                    {
-                        <td>@project.Group.Name</td>
-                    }
-                    else
-                    {
-                        <td>None</td>
-                    }
-                    @if (project.Content != null)
-                    {
-                        <td @onclick="@(e => NavigateToWordpressDetails(project.Content.ID))">@project.Content.TypeName</td>
-                    }
-                    else
-                    {
-                        <td>None</td>
-                    }
-                    <td>@project.DateAdded</td>
-                    @if (project.Frequency != null)
-                    {
-                        <td>@project.Frequency</td>
-                    }
-                    else
-                    {
-                        <td>None</td>
-                    }
-                    @if (project.LastPushed != null)
-                    {
-                        <td>@project.LastPushed</td>
-                    }
-                    else
-                    {
-                        <td>None</td>
-                    }
-                    @if (project.WasSuccess.HasValue)
-                    {
-                        <td>@(project.WasSuccess.Value ? "Success" : "Failed")</td>
-                    }
-                    else
-                    {
-                        <td>None</td>
-                    }
-                    @if (project.Active)
-                    {
-                        <td>Active</td>
-                    }
-                    else
-                    {
-                        <td>Disabled</td>
-                    }
-                    <td><input type="button" class="btn btn-primary" @onclick="@(e => NavigateToEdit(project.ID))" value="Edit" /></td>
-                    <td><input type="button" class="btn btn-danger" @onclick="@(e => NavigateToDelete(project.ID))" value="Delete" /></td>
-                </tr>
+            <tr>
+                <td @onclick="@(e => NavigateToDetails(project.ID))">@project.Name</td>
+                @if (project.Niche != null)
+                {
+                    <td>@project.Niche.Name</td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
+                @if (project.Group != null)
+                {
+                    <td>@project.Group.Name</td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
+                @if (project.Content != null)
+                {
+                    <td @onclick="@(e => NavigateToWordpressDetails(project.Content.ID))">@project.Content.TypeName</td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
+                <td>@project.DateAdded</td>
+                @if (project.Frequency != null)
+                {
+                    <td>@project.Frequency</td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
+                @if (project.LastPushed != null)
+                {
+                    <td>@project.LastPushed</td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
+                @if (project.WasSuccess.HasValue)
+                {
+                    <td>@(project.WasSuccess.Value ? "Success" : "Failed")</td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
+                @if (project.Active)
+                {
+                    <td>Active</td>
+                }
+                else
+                {
+                    <td>Disabled</td>
+                }
+                <td><input type="button" class="btn btn-primary" @onclick="@(e => NavigateToEdit(project.ID))" value="Edit" /></td>
+                <td><input type="button" class="btn btn-danger" @onclick="@(e => NavigateToDelete(project.ID))" value="Delete" /></td>
+            </tr>
             }
         </tbody>
     </table>

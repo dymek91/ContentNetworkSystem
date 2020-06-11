@@ -3,15 +3,17 @@ using System;
 using ContentNetworkSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ContentNetworkSystem.Migrations
 {
     [DbContext(typeof(ContentNetworkSystemContext))]
-    partial class ContentNetworkSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20200611180015_AddedNichesKeywords")]
+    partial class AddedNichesKeywords
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

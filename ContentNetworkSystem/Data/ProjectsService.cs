@@ -62,6 +62,7 @@ namespace ContentNetworkSystem.Data
             {
                 await _context.Entry(project).Reference(e => e.Content).LoadAsync();
                 await _context.Entry(project).Reference(e => e.Group).LoadAsync();
+                await _context.Entry(project).Reference(e => e.Niche).LoadAsync();
             }
             return projects;
         }
@@ -75,6 +76,7 @@ namespace ContentNetworkSystem.Data
             }
             await _context.Entry(project).Reference(e => e.Content).LoadAsync();
             await _context.Entry(project).Reference(e => e.Group).LoadAsync();
+            await _context.Entry(project).Reference(e => e.Niche).LoadAsync();
 
             return project;
         }
