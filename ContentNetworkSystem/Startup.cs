@@ -13,6 +13,7 @@ using ContentNetworkSystem.Data;
 using ContentNetworkSystem.Push;
 using ContentNetworkSystem.Pull;
 using ContentNetworkSystem.Models;
+using ContentNetworkSystem.Data.GoogleSearchCache;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.HttpOverrides;
 using System.IdentityModel.Tokens.Jwt;
@@ -102,6 +103,8 @@ namespace ContentNetworkSystem
             services.AddTransient<IProjectsService, ProjectsService>();
             services.AddTransient<INichesService, NichesService>();
             services.AddTransient<IKeywordsService, KeywordsService>();
+            services.AddTransient<IYoutubeResultsService, YoutubeResultsService>();
+            services.AddTransient<IImagesResultsService, ImagesResultsService>(); 
             services.AddTransient<SchedulerService>();
 
             //push
@@ -109,6 +112,9 @@ namespace ContentNetworkSystem
 
             //pull
             services.AddTransient<TextGenerationService>();
+            services.AddTransient<YouTubeService>();
+            services.AddTransient<GoogleImagesService>();
+            services.AddTransient<RandomContentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

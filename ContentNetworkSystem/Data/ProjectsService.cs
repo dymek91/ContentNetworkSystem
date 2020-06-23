@@ -63,6 +63,12 @@ namespace ContentNetworkSystem.Data
                 await _context.Entry(project).Reference(e => e.Content).LoadAsync();
                 await _context.Entry(project).Reference(e => e.Group).LoadAsync();
                 await _context.Entry(project).Reference(e => e.Niche).LoadAsync();
+                if (project.Niche!=null)
+                {
+                    await _context.Entry(project.Niche).Collection(e => e.Keywords).LoadAsync();
+                    await _context.Entry(project.Niche).Collection(e => e.YoutubeResults).LoadAsync();
+                    await _context.Entry(project.Niche).Collection(e => e.ImagesResults).LoadAsync();
+                }
             }
             return projects;
         }
@@ -77,6 +83,12 @@ namespace ContentNetworkSystem.Data
             await _context.Entry(project).Reference(e => e.Content).LoadAsync();
             await _context.Entry(project).Reference(e => e.Group).LoadAsync();
             await _context.Entry(project).Reference(e => e.Niche).LoadAsync();
+            if (project.Niche != null)
+            {
+                await _context.Entry(project.Niche).Collection(e => e.Keywords).LoadAsync();
+                await _context.Entry(project.Niche).Collection(e => e.YoutubeResults).LoadAsync();
+                await _context.Entry(project.Niche).Collection(e => e.ImagesResults).LoadAsync();
+            }
 
             return project;
         }

@@ -60,6 +60,8 @@ namespace ContentNetworkSystem.Data
 
             await _context.Entry(niche).Collection(e => e.Keywords).LoadAsync();
             await _context.Entry(niche).Collection(e => e.Projects).LoadAsync();
+            await _context.Entry(niche).Collection(e => e.YoutubeResults).LoadAsync();
+            await _context.Entry(niche).Collection(e => e.ImagesResults).LoadAsync();
 
             return niche;
         }

@@ -65,7 +65,7 @@ namespace ContentNetworkSystem.Data
                         }
                         catch(Exception e)
                         {
-                            _logger.LogError("Message: {Message} | StackTrace: {StackTrace}", e.Message, e.StackTrace);
+                            _logger.LogError("{0}", e);
                             project.WasSuccess = false;
                         }
                         project.LastPushed = currDate;
@@ -75,7 +75,7 @@ namespace ContentNetworkSystem.Data
             }
             catch(Exception e)
             {
-                _logger.LogError("Message: {Message} | StackTrace: {StackTrace}", e.Message, e.StackTrace);
+                _logger.LogError("{0}", e);
             }
 
             await UnlockAsync();

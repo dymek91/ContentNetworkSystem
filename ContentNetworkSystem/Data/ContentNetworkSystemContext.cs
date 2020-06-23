@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ContentNetworkSystem.Models;
+using ContentNetworkSystem.Models.GoogleSearchCache;
 
 namespace ContentNetworkSystem.Data
 {
@@ -21,6 +22,8 @@ namespace ContentNetworkSystem.Data
         public DbSet<Wordpress> Wordpresses { get; set; }
         public DbSet<Niche> Niches { get; set; }
         public DbSet<Keyword> Keywords { get; set; }
+        public DbSet<YoutubeResult> YoutubeResults { get; set; }
+        public DbSet<ImagesResult> ImagesResults { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +48,8 @@ namespace ContentNetworkSystem.Data
             modelBuilder.Entity<Keyword>().ToTable("Keyword")
                 .HasIndex(e => new { e.NicheId, e.Name })
                 .IsUnique();
+            modelBuilder.Entity<YoutubeResult>().ToTable("YoutubeResult");
+            modelBuilder.Entity<ImagesResult>().ToTable("ImagesResult");
         }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using ContentNetworkSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ContentNetworkSystem.Migrations
 {
     [DbContext(typeof(ContentNetworkSystemContext))]
-    partial class ContentNetworkSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20200620111327_AddedFieldsToWordpress")]
+    partial class AddedFieldsToWordpress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,52 +53,6 @@ namespace ContentNetworkSystem.Migrations
                     b.ToTable("Content");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Content");
-                });
-
-            modelBuilder.Entity("ContentNetworkSystem.Models.GoogleSearchCache.ImagesResult", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("NicheId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("text");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("NicheId");
-
-                    b.ToTable("ImagesResult");
-                });
-
-            modelBuilder.Entity("ContentNetworkSystem.Models.GoogleSearchCache.YoutubeResult", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("NicheId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("text");
-
-                    b.Property<string>("VideoId")
-                        .HasColumnType("text");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("NicheId");
-
-                    b.ToTable("YoutubeResult");
                 });
 
             modelBuilder.Entity("ContentNetworkSystem.Models.Group", b =>
@@ -255,24 +211,6 @@ namespace ContentNetworkSystem.Migrations
                     b.HasOne("ContentNetworkSystem.Models.Project", "Project")
                         .WithOne("Content")
                         .HasForeignKey("ContentNetworkSystem.Models.Content", "ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ContentNetworkSystem.Models.GoogleSearchCache.ImagesResult", b =>
-                {
-                    b.HasOne("ContentNetworkSystem.Models.Niche", "Niche")
-                        .WithMany("ImagesResults")
-                        .HasForeignKey("NicheId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ContentNetworkSystem.Models.GoogleSearchCache.YoutubeResult", b =>
-                {
-                    b.HasOne("ContentNetworkSystem.Models.Niche", "Niche")
-                        .WithMany("YoutubeResults")
-                        .HasForeignKey("NicheId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

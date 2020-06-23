@@ -1,0 +1,1039 @@
+;edit this to your needs
+
+;this could be used to take a random image from a folder
+;[local_images_to_data_url]
+;type=image
+;result=<img src="%spinfolder_data_url-c:\some\folder\with\images\%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+===============================================================
+========== Pre-defined content just for SER ===================
+===============================================================
+
+!!!!!!!!!!!!!VIDEO!!!!!!!!!!!!!!!!!!!!
+
+[youtube]
+url=https://www.youtube.com/results?filters=video&search_query=%search%&lclk=video
+type=video
+seperator="videoRenderer":
+content_front1="videoId":
+content_front2="thumbnail":
+content_front3="url":
+content_front4="
+content_back=/hqdefault.jpg|/sddefault.jpg
+content_replace=https://i.ytimg.com/vi/;https://www.youtube.com/watch?v=
+author_front="/user/
+author_back1="
+title_front1="simpleText":
+title_front2="
+title_back="
+result=<iframe width="640" height="360" src="//www.youtube.com/embed/%content%" frameborder="0" allowfullscreen title="%title% (c) by %author%" style="float:{#vleft left|#vleft left|#vleft left|#vleft left|#vright right};padding:{#vright 10px 0px 10px 10px|#vleft 10px 10px 10px 0px};border:0px;"></iframe>
+must have=!google !__url__
+
+
+[metacafe.com]
+url=http://www.metacafe.com/videos_about/%search%/newest/
+type=video
+seperator=id="search_videos_videos_list_search_result_items"
+content_front=.com/watch/
+content_back1=/
+title_front=title="
+title_back="
+author_front=<a href="http://www.metacafe.com/channels/
+author_front2=title=" 
+author_back="
+result=<iframe src="http://www.metacafe.com/embed/%content%/" width="640" height="360" allowFullScreen frameborder=0 title="%title% (c) %author%" style="float:{#vleft left|#vleft left|#vleft left|#vleft left|#vright right};padding:{#vright 10px 0px 10px 10px|#vleft 10px 10px 10px 0px};border:0px;"></iframe>
+
+
+[dailymotion.com]
+url=http://www.dailymotion.com/de/relevance/search/%search%/1
+type=video
+seperator=<div class="sd_video_listitem
+content_front=data-id="
+content_back="
+author_front=<div class="owner">
+author_front2=<a href="/
+author_back="
+title_front= title="
+title_back="
+result=<iframe frameborder="0" width="480" height="270" src="http://www.dailymotion.com/embed/video/%content%" title="%title% (c) %author%" style="float:{#vleft left|#vleft left|#vleft left|#vleft left|#vright right};padding:{#vright 10px 0px 10px 10px|#vleft 10px 10px 10px 0px};border:0px;"></iframe>
+
+
+[youku]
+url=https://so.youku.com/search_video/q_%search%
+type=video
+seperator=<li class=\"
+content_front=/v_show/id_
+content_back=.html
+title_front=<a title=\"
+title_back=\"|"
+result=<iframe height=498 width=510 src="http://player.youku.com/embed/%content%" frameborder=0 allowfullscreen title="%title%" style="float:{#vleft left|#vleft left|#vleft left|#vleft left|#vright right};padding:{#vright 10px 0px 10px 10px|#vleft 10px 10px 10px 0px};border:0px;"></iframe>
+
+!!!!!!!!!!!LINK!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[google.com]
+url=http://www.google.de/search?q=%search%
+type=link
+seperator=<div class="r">
+content_front1=href="
+content_back="|&amp
+result=<a href="%content%">%search%</a>
+must have=!google
+
+[bing.com]
+url=http://www.bing.com/search?q=%search%
+type=link
+seperator=<li class="b_algo">
+content_front=href="
+content_back="
+result=<a href="%content%">%search%</a>
+must have=!google !bing !dict !msn
+
+!!!!!!!!!!!!!!!!!!!!ARTICLE!!!!!!!!!!!!!!!!!!!!
+
+[article.org.in]
+url=http://www.article.org.in/search.php?s=%search%
+type=article
+cut_top=<h1 id="title">
+seperator=<h2>
+url_front=href="
+url_back="
+title_front=<h1>
+title_back=</
+content_front=<div id="content-body">
+content_back=<h2>|</div>
+remove html=1
+author_front=<h2>About the Author</h2>
+author_front2=<td><b>
+author_back=<
+result=%content%|article_title=%title%
+
+[sooperarticles.com]
+url=http://www.sooperarticles.com/search/?t=contents&s=%search%
+seperator=<article class="list hentry post short">
+type=article
+url_front=class="entry-title"><a href="
+url_back1="
+url_back2=?page_tag=
+content_front=<div class="abody">
+content_back=</article>
+author_front=<span rel="author me"><b>
+author_back=<
+title_front=<h1>
+title_back=</h1>
+result=%content%|article_title=%title%
+remove html=1
+
+
+[reuters.com]
+url=http://www.bing.com/search?q=site%3Areuters.com+%search%&go=Search&qs=ds&form=QBRE
+type=article
+seperator=<li class="b_algo">
+url_front=href="
+url_back="
+url_must_have=*reuters.com*
+title_front=og:title" content="
+title_back="| - Reuters
+author_front=name="Author" content="By
+author_back="
+content_front=<div class="vcnn_share">|<div id="article-copy">
+content_back=|<p>Contact Info:<br /><div class="linebreak"></div>
+result=%content%|article_title=%title%
+remove html=1
+remove=(Reuters)|REUTERS
+
+
+[hubpages.com]
+url=http://www.bing.com/search?q=site%3Ahubpages.com+%search%&go=Search&qs=ds&form=QBRE
+type=article
+seperator=<li class="b_algo">
+url_front=href="
+url_back="
+url_must_have=*hubpages.com*
+title_front=<meta property="og:title" content="|<title>
+title_back="|</title>
+author_front=<span class="author_primary_name">
+author_back=<
+content_front=<div class="full module moduleText"|<article> 
+content_back=<div class="boxdata">|</article>
+result=%content%|article_title=%title%
+remove html=1
+
+[articlesfactory.com]
+url=http://www.bing.com/search?q=site%3Aarticlesfactory.com+%search%&go=Search&qs=ds&form=QBRE
+type=article
+seperator=<li class="b_algo">
+url_front=href="
+url_back="
+url_must_have=*articlesfactory.com*
+content_front=</b></p>|<h1 class="h2">
+content_front2=</script>
+content_back=<p class="txt-small-regular">
+content_back2=Article Tags:
+author_front=/author/
+author_front2=.html">
+author_back=<
+title_front=<title>|h1 class="h2">|width="25" height="23" alt="Digg: |width="25" height="23" alt="Print: |width="24" height="23" alt="Email: 
+title_back=</
+title_back2="
+result=%content%|article_title=%title%
+remove html=1
+
+
+===============================================================
+========== Converted from GSA Content Generator ===============
+===============================================================
+
+
+[Answers]
+type=article
+url=https://www.answers.com/search?q=%search%
+seperator=<h3>
+content_front1=<div class="answer_block"|id="answer_block"
+content_front2=>
+content_back=<div id="question-related-questions">
+title_front=<title>
+title_back=</
+url_front=href="
+url_back="
+remove html=1
+result=%content%|article_title=%title%
+
+[article.org.in]
+type=article
+url=http://www.article.org.in/search.php?s=%search%
+seperator=<h2>
+content_front=<div id="content-body">
+content_back=<h2>|</div>
+title_front=<h1>
+title_back=</
+author_front=<h2>About the Author</h2>
+author_back=<
+cut_top=<h1 id="title">
+remove html=1
+result=%content%|article_title=%title%
+
+[BBC.co.uk]
+type=article
+url=https://www.bbc.co.uk/search?q=%search%&filter=news&suggid=
+seperator=<article
+content_front=property="articleBody">
+content_back=<div class="story-related">|<div class="tags-container">
+title_front=<h1
+title_back=</h1>
+url_front=<a href="
+remove html=1
+result=%content%|article_title=%title%
+
+[CNet]
+type=article
+url=https://www.cnet.com/search/?query=%search%
+seperator=<section class="searchItem
+content_front=<article
+content_back=<h3>Related stories</h3>|<div class="shortcode gallery" |</article>
+title_front=<meta property="og:title" content="|<title>
+title_back="| - CNET|</title>
+author_front=<meta name="author" content="
+author_back="
+url_front=href="
+url_back="
+remove html=1
+result=%content%|article_title=%title%
+
+[dailymail.co.uk]
+type=article
+url=https://www.dailymail.co.uk/home/search.html?offset=0&size=50&sel=site&searchPhrase=%search%&sort=recent&days=all
+seperator=class="sch-result
+content_front1=<div itemprop="articleBody">
+content_back=<mol-permabox|<div class="shareArticles">|<div class="adHolder item" id="inread-player">|<div class="column-content cleared">|<h3 class="mol-factbox-title">
+title_front=<meta property ="og:title" content="
+title_back="
+author_front=authorName: '
+author_back='|;
+url_front=href="
+remove html=1
+result=%content%|article_title=%title%
+
+[engadget]
+type=article
+url=https://api.swiftype.com/api/v1/public/engines/search.json?callback=jQuery22402812123303940113_1485767916438&engine_key=vKhrkVp6Cfwro_h8kpyC&q=%search%&search_fields%5Bpage%5D%5B%5D=title%5E5&search_fields%5Bpage%5D%5B%5D=main_tag_label&search_fields%5Bpage%5D%5B%5D=blogger_name&search_fields%5Bpage%5D%5B%5D=model&search_fields%5Bpage%5D%5B%5D=brand&search_fields%5Bpage%5D%5B%5D=tags&filters%5Bpage%5D%5Btype%5D%5B%5D=articles&filters%5Bpage%5D%5Btype%5D%5B%5D=reviews&filters%5Bpage%5D%5Btype%5D%5B%5D=products&filters%5Bpage%5D%5Btype%5D%5B%5D=videos&filters%5Bpage%5D%5Btype%5D%5B%5D=galleries&sort_field%5Bpage%5D=published_at&per_page=10&spelling=retry&_=1485767916439
+seperator={"body":"
+content_front=<div class="article
+content_back=<footer
+title_front=<title>
+title_back=</
+author_front="name": "
+author_back="
+url_front=,"url":"
+url_back="
+remove html=1
+result=%content%|article_title=%title%
+
+[Vietnamnet.vn]
+type=article
+url=https://timkiem-srv.vietnamnet.vn/jsx/article/search/data.jsx?k=%search%&ic=0&ord=0&c=0&act=&sd=&ed=&p=1
+seperator=},{
+content_front=id="ArticleContent"
+content_back=<div class="VnnAdsPos|<div class="m-t-15">
+title_front=<meta property="og:title" content="
+title_back="|<
+author_front="author": {
+author_back="
+url_front=,"url":"
+url_back="
+remove html=1
+result=%content%|article_title=%title%
+
+[AOL (commercial use, modify)]
+type=image
+url=https://search.aol.com/aol/image?q=%search%&s_it=searchtabs&v_t=na&imgl=fmuc
+seperator=data='{"
+content_front=,"iurl":"
+content_back="
+content_remove=\
+author_front=,"a":"
+author_back="
+title_front=,"alt":"
+title_back="
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[AOL (commercial use, no modify)]
+type=image
+url=https://search.aol.com/aol/image?q=%search%&s_it=searchtabs&v_t=na&imgl=fsuc
+seperator=data='{"
+content_front=,"iurl":"
+content_back="
+content_remove=\
+author_front=,"a":"
+author_back="
+title_front=,"alt":"
+title_back="
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[AOL (no license filter)]
+type=image
+url=https://search.aol.com/aol/image?q=%search%&s_it=searchtabs&v_t=na
+seperator=data='{"
+content_front=,"iurl":"
+content_back="
+content_remove=\
+author_front=,"a":"
+author_back="
+title_front=,"alt":"
+title_back="
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[AOL (personal use, modify)]
+type=image
+url=https://search.aol.com/aol/image?q=%search%&s_it=searchtabs&v_t=na&imgl=fmu
+seperator=data='{"
+content_front=,"iurl":"
+content_back="
+content_remove=\
+author_front=,"a":"
+author_back="
+title_front=,"alt":"
+title_back="
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[AOL (personal use, no modify)]
+type=image
+url=https://search.aol.com/aol/image?q=%search%&s_it=searchtabs&v_t=na&imgl=fsu
+seperator=data='{"
+content_front=,"iurl":"
+content_back="
+content_remove=\
+author_front=,"a":"
+author_back="
+title_front=,"alt":"
+title_back="
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[AOL (Public Domain, free)]
+type=image
+url=https://search.aol.com/aol/image?q=%search%&s_it=searchtabs&v_t=na&imgl=pd
+seperator=data='{"
+content_front=,"iurl":"
+content_back="
+content_remove=\
+author_front=,"a":"
+author_back="
+title_front=,"alt":"
+title_back="
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Baidu Image Search]
+type=image
+url=http://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&is=&fp=result&queryWord=%search%&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&z=&ic=0&word=%search%&s=&se=&tab=&width=&height=&face=0&istype=2&qc=&nc=1&fr=&rn=30&pn=0
+seperator="pageNum":
+content_front1={"ObjURL":"
+content_front2={"ObjURL":"
+content_back="
+content_remove=\
+author_front=fromURLHost":"
+author_back="
+title_front=fromPageTitle":"
+title_back="
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Bing Image Search]
+type=image
+url=http://www.bing.com/images/search?q=%search%&first=0
+seperator=<div class="img_cont
+content_front1=&quot;murl&quot;:&quot;
+content_back=&quot;
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[CC Search]
+type=image
+url=https://api.creativecommons.engineering/image/search?page=1&shouldPersistImages=true&q=%search%&provider=&li=&lt=&searchBy=
+seperator=&quot;title&quot;:|"title":
+content_front=&quot;url&quot;: &quot;<a href="|"url":"
+content_back=&quot;|"
+title_front=&quot;|"
+title_back=&quot;|"
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[cgtrader]
+type=image
+url=https://www.cgtrader.com/3d-models?keywords=%search%&page=1
+seperator=&quot;largeUrl&quot;:
+content_front=&quot;
+content_back=&quot;
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[DirectUpload.net]
+type=image
+url=http://www.directupload.net/index.php?mode=keywords&keys=%search%&p=0
+seperator=<div class="gallery-image">
+content_front=<meta property="og:image" content="
+content_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[DuckDuckGo]
+type=image
+url=https://duckduckgo.com/i.js?l=ch-de&o=json&q=%search%&vqd=%vqd%&f=,,,&s=0
+seperator={"title":|{"image":
+content_front=image":"
+content_back="
+content_remove=\
+title_front=title":"
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Flickr]
+type=image
+url=https://api.flickr.com/services/feeds/photos_public.gne?format=xmlrpc&nojsoncallback=1&tags=%search%&license=4%2C5%2C9%2C10&per_page=500
+seperator=<entry>
+content_front1=src=&quot;
+content_back=&quot;
+content_replace=_m.;.
+author_front=<author>
+author_back=</name>
+title_front=<title>
+title_back=</title>
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[foodiesfeed]
+type=image
+url=https://www.foodiesfeed.com/page/1/?s=%search%
+seperator=<article
+content_front=<img width="
+content_back="
+author_front1=author">
+author_front2=alt="
+author_back="
+title_front1=alt="
+title_back="
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[FreeImages]
+type=image
+url=https://www.freeimages.com/search/%search%/1?free=1
+seperator=<li class="item">
+content_front=<img src="
+content_back="
+content_replace=/small-previews/;/large-previews/
+title_front=alt="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[FreePik]
+type=image
+url=https://www.freepik.com/index.php?goto=2&k=%search%&order=2&searchform=1&vars=1
+seperator=<div class="img_box">
+content_front=class="preview" src="
+content_back="|?
+title_front=alt="|title="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[FreePixels]
+type=image
+url=https://www.freepixels.com/?s=%search%&post_type=attachment
+seperator=<div class="entry-box"
+content_front=title="Download"
+content_back="
+title_front=title="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[freestocks.org]
+type=image
+url=https://freestocks.org/page/1/?s=%search%
+seperator=<div class="img-wrap">
+content_front=.jpg 768w, |srcset="|src="
+content_back=1024w,| |"
+title_front1=alt="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Google Image Search (commercial use, modify)]
+type=image
+url=https://www.google.com/search?site=imghp&tbm=isch&q=%search%&tbs=sur:fmc&gws_rd=cr
+seperator={"id":"
+content_front=,"ou":"
+content_back="
+title_front=,"s":"
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Google Image Search (commercial use, no modify)]
+type=image
+url=https://www.google.com/search?site=imghp&tbm=isch&q=%search%&tbs=sur:fc&gws_rd=cr
+seperator={"id":"
+content_front=,"ou":"
+content_back="
+title_front=,"s":"
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Google Image Search (no license filter)]
+type=image
+url=https://www.google.com/search?site=imghp&tbm=isch&q=%search%&gws_rd=cr
+seperator={"id":"
+content_front=,"ou":"
+content_back="
+title_front=,"s":"
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Google Image Search (personal use, modify)]
+type=image
+url=https://www.google.com/search?site=imghp&tbm=isch&q=%search%&tbs=sur:fm&gws_rd=cr
+seperator={"id":"
+content_front=,"ou":"
+content_back="
+title_front=,"s":"
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Google Image Search (personal use, no modify)]
+type=image
+url=https://www.google.com/search?site=imghp&tbm=isch&q=%search%&tbs=sur:f&gws_rd=cr
+seperator={"id":"
+content_front=,"ou":"
+content_back="
+title_front=,"s":"
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Iistella]
+type=image
+url=http://image.istella.it/it/home/search/img_response/1?key=%search%
+seperator="imgurl":
+content_front="
+content_back="
+content_replace=\;|&amp;&|\/;/
+title_front="title":
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[ImageAfter]
+type=image
+url=http://www.imageafter.com/search.php?next_offset=0&search=%search%
+seperator=class="thumb">
+content_front1=alt="thumb_buttspace_normal"
+content_front2=href="
+content_back="
+title_front=title="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[imagefree]
+type=image
+url=https://www.imagefree.com/search-images-photos/search/%search%
+seperator=each-pic
+content_front=src="
+content_back="
+content_replace=-_thumb;_medium
+title_front=alt="
+title_back="
+title_remove=-
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[imageshack.com]
+type=image
+url=https://api.imageshack.com/v2/tags/%search%
+seperator=,{"id"
+content_front=id="share-dl" href="
+content_back="
+author_front=username":"
+author_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[imcreator.com]
+type=image
+url=http://imcreator.com/?s=%search%
+seperator=<div class="img-holder">
+content_front=296w, |300w, |src="
+content_back=?| |"|)|;|>
+title_front=rel="bookmark">
+title_back=<
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[insta9pho]
+type=image
+url=https://www.insta9pho.com/tag/%search%
+seperator=<div class="listing-item">
+content_front=<img src="
+content_back="
+title_front=alt="
+title_back="
+title_remove=#.*
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Instagram]
+type=image
+url=https://www.instagram.com/explore/tags/%search%/
+seperator=},{"node":
+content_front=display_url":"
+content_back="
+title_front1=text":"
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[KaboomPics]
+type=image
+url=https://kaboompics.com/gallery?search=%search%&page=1
+seperator=<li class="work-item
+content_front=download" href="
+content_back="
+title_front=<h3 class="work-title">
+title_back=</h3>
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[LifeOfPix]
+type=image
+url=https://www.lifeofpix.com/search/%search%?category=&orientation=&color=
+seperator=<div class="node
+content_front=<a download="
+content_back="
+author_front=<a href="/photographers/
+author_back=</a>
+title_front=alt="
+title_back="
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Mail.ru]
+type=image
+url=https://go.mail.ru/search_images?q=%search%&utf8in=1&num=0&ajax=1
+seperator="imUrl":
+content_front="
+content_back="
+content_replace=\;|&amp;&|\/;/
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[MetaGer.de]
+type=image
+url=https://metager.de/en/meta/meta.ger3?eingabe=%search%&submit-query=&focus=bilder&s=&d=&c=&l=&t=&a=&co=&f=&m=
+seperator=<div class="image">
+content_front=/meta/picture?url=
+content_back="
+content_replace=%3A;:|%2F;/|%3F;?|%3D;=|%26;&
+title_front=alt="|title="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[MMTStock]
+type=image
+url=https://mmtstock.com/page/1?s=%search%
+seperator=<div class="content-grid-card">
+content_front=<img
+content_back="
+title_front1=<div class="text">
+title_back=</
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Morguefile]
+type=image
+url=https://morguefile.com/image/json?page=1&terms=%search%&sort=pop&af=morguefile&author=&isVideo=false
+seperator="unique_id":
+content_front=file_path_high":"|file_path_large":"
+content_back="
+content_replace=\/;/
+author_front=username":"
+author_back="
+title_front=tags":"|title":"
+title_back="
+title_remove=\/;/
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[naver.com (Commercial use, modify)]
+type=image
+url=https://s.search.naver.com/imagesearch/instant/search.naver?where=image&section=image&rev=31&ssl=1&res_fr=0&res_to=0&face=0&color=1&ccl=6&ac=0&aq=0&spq=1&query=%search%&nx_search_query=%search%&nx_and_query=&nx_sub_query=&nx_search_hlquery=&nx_search_fasquery=&datetype=0&startdate=0&enddate=0&json_type=6&nlu_query=&nqx_theme=%7B%22theme%22%3A%7B%22main%22%3A%7B%22name%22%3A%22dictionary_en%22%7D%7D%7D&start=1&display=100&_callback=window.__jindo2_callback.__sauImageTabList_0
+seperator="html":|<span class="_meta" style="display:none;">
+content_front1=originalUrl":"|\"originalUrl\":\"
+content_back=\"|"
+content_replace=%2F;/|%3A;:|%3F;?|%3D;=
+title_front=title=\"|<em class="tit">
+title_back=\"|</em>
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[naver.com (Commercial use, no modify)]
+type=image
+url=https://s.search.naver.com/imagesearch/instant/search.naver?where=image&section=image&rev=31&ssl=1&res_fr=0&res_to=0&face=0&color=1&ccl=2&ac=0&aq=0&spq=1&query=%search%&nx_search_query=%search%&nx_and_query=&nx_sub_query=&nx_search_hlquery=&nx_search_fasquery=&datetype=0&startdate=0&enddate=0&json_type=6&nlu_query=&nqx_theme=%7B%22theme%22%3A%7B%22main%22%3A%7B%22name%22%3A%22dictionary_en%22%7D%7D%7D&start=1&display=100&_callback=window.__jindo2_callback.__sauImageTabList_0
+seperator="html":|<span class="_meta" style="display:none;">
+content_front1=originalUrl":"|\"originalUrl\":\"
+content_back=\"|"
+content_replace=%2F;/|%3A;:|%3F;?|%3D;=
+title_front=title=\"|<em class="tit">
+title_back=\"|</em>
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[naver.com (Creative Commons License)]
+type=image
+url=https://s.search.naver.com/imagesearch/instant/search.naver?where=image&section=image&rev=31&ssl=1&res_fr=0&res_to=0&face=0&color=1&ccl=0&ac=0&aq=0&spq=1&query=%search%&nx_search_query=%search%&nx_and_query=&nx_sub_query=&nx_search_hlquery=&nx_search_fasquery=&datetype=0&startdate=0&enddate=0&json_type=6&nlu_query=&nqx_theme=%7B%22theme%22%3A%7B%22main%22%3A%7B%22name%22%3A%22dictionary_en%22%7D%7D%7D&start=1&display=100&_callback=window.__jindo2_callback.__sauImageTabList_0
+seperator="html":|<span class="_meta" style="display:none;">
+content_front1=originalUrl":"|\"originalUrl\":\"
+content_back=\"|"
+content_replace=%2F;/|%3A;:|%3F;?|%3D;=
+title_front=title=\"|<em class="tit">
+title_back=\"|</em>
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[naver.com (Personal use, modify)]
+type=image
+url=https://s.search.naver.com/imagesearch/instant/search.naver?where=image&section=image&rev=31&ssl=1&res_fr=0&res_to=0&face=0&color=4&ccl=6&ac=0&aq=0&spq=1&query=%search%&nx_search_query=%search%&nx_and_query=&nx_sub_query=&nx_search_hlquery=&nx_search_fasquery=&datetype=0&startdate=0&enddate=0&json_type=6&nlu_query=&nqx_theme=%7B%22theme%22%3A%7B%22main%22%3A%7B%22name%22%3A%22dictionary_en%22%7D%7D%7D&start=1&display=100&_callback=window.__jindo2_callback.__sauImageTabList_0
+seperator="html":|<span class="_meta" style="display:none;">
+content_front1=originalUrl":"|\"originalUrl\":\"
+content_back=\"|"
+content_replace=%2F;/|%3A;:|%3F;?|%3D;=
+title_front=title=\"|<em class="tit">
+title_back=\"|</em>
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[naver.com]
+type=image
+url=https://s.search.naver.com/imagesearch/instant/search.naver?where=image&section=image&rev=31&ssl=1&res_fr=0&res_to=0&face=0&color=0&ccl=0&ac=0&aq=0&spq=1&query=%search%&nx_search_query=%search%&nx_and_query=&nx_sub_query=&nx_search_hlquery=&nx_search_fasquery=&datetype=0&startdate=0&enddate=0&json_type=6&nlu_query=&nqx_theme=%7B%22theme%22%3A%7B%22main%22%3A%7B%22name%22%3A%22dictionary_en%22%7D%7D%7D&start=1&display=100&_callback=window.__jindo2_callback.__sauImageTabList_0
+seperator="html":|<span class="_meta" style="display:none;">
+content_front1=originalUrl":"|\"originalUrl\":\"
+content_back=\"|"
+content_replace=%2F;/|%3A;:|%3F;?|%3D;=
+title_front=title=\"|<em class="tit">
+title_back=\"|</em>
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[negativespace]
+type=image
+url=https://negativespace.co/page/1/?s=%search%
+seperator=<article
+content_front=<img width="
+content_back="
+content_replace=-thumb.*;.jpg
+content_remove=https://negativespace.co/wp-content/themes/negative-space-v4.0/images/adobe-stock-black.jpg
+title_front1=<img width=
+title_front2=title="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[NewOldStock]
+type=image
+url=https://nos.twnsnd.co/search/%search%
+seperator=<article
+content_front1=src="
+content_back="
+title_front=alt="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Oscobo.com]
+type=image
+url=https://www.oscobo.com/images.php?q=%search%&a=&u=&t=
+seperator=<div class="item">
+content_front=<img src="
+content_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[parsijoo.ir]
+type=image
+url=http://image.parsijoo.ir/image?q=%search%&color=&size=
+seperator=<div class="Image_Wrapper"
+content_front=&image=
+content_back=&
+content_replace=%3a;:|%2f;/|%3f;?|%3d;=|%26;&
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[pexels]
+type=image
+url=https://www.pexels.com/search/%search%/
+seperator=<article
+content_front=data-pin-media="|<img srcset="
+content_back="|?
+title_front=alt="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[picjumbo.com]
+type=image
+url=https://picjumbo.com/page/1/?s=%search%
+seperator=<div class="tri_img_
+content_front=<img class="image" src="
+content_back=?|"
+title_front=<h3>
+title_back="|<
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[picography]
+type=image
+url=https://picography.co/page/1/?s=%search%
+seperator=<article
+content_front=<img width="
+content_back="
+content_replace=-sm-1.*;.jpg
+title_front=<div class="text">
+title_back=</
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Pikist]
+type=image
+url=https://www.pikist.com/search?q=%search%&page=1
+seperator=itemtype="http://schema.org/ImageObject"
+content_front1=itemprop="contentUrl"
+content_front2=href="
+content_back="
+title_front=<figcaption
+title_back=</figcaption>
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Pinterest]
+type=image
+url=https://www.pinterest.de/search/?q=%search%
+seperator=image_signature
+content_front1="orig":
+content_front2=url": "
+content_back="
+author_front=username": "
+author_back="
+title_front=description": "
+title_back="
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[RGBStock]
+type=image
+url=http://www.rgbstock.com/images/%search%/1
+seperator=photoitem
+content_front=<noscript><img src="|data-bttrlazyloading-lg-src="
+content_back="
+content_replace=//300/;/600/|/300/;/600/
+title_front=\"title\":\"|<span>
+title_back=\"|</span>
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Seznam.cz]
+type=image
+url=https://obrazky.seznam.cz/searchAjax?q=%search%&size=any&color=any&pornFilter=0&from=0
+seperator="clickpageUrl":
+content_front=imageUrl": "
+content_back="
+title_front=title": "
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[shopify.com]
+type=image
+url=https://burst.shopify.com/photos/search?button=&page=1&q=%search%&utf8=%E2%9C%93
+seperator=<div class="photo-tile">
+content_front=data-modal-image-url="
+content_back="
+title_front=data-ga-label="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[ShotStash]
+type=image
+url=https://shotstash.com/page/1/?s=%search%
+seperator=<article
+content_front=data-src-x-high="|data-src-small="|<img src=
+content_back="
+content_replace=-320x213.jpg;.jpg|-640x427.jpg;.jpg|-extra-small
+title_front=<div class="meta-topic">|title="
+title_back="|<
+title_remove=Free Photo
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[SlideShare]
+type=image
+url=https://www.slideshare.net/search/slideshow?searchfrom=header&q=%search%
+seperator=<li class="
+content_front=<img src="
+content_back=?|"|)|;|>
+title_front=title="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[StyledStock]
+type=image
+url=https://styledstock.co/page/1/?s=%search%&post_type=product
+seperator=<div class="product-grid-item
+content_front=<a rel="nofollow" href="
+content_back="
+title_front=alt="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Swobbl]
+type=image
+url=https://www.swobbl.eu/images?q=%search%
+seperator=<li class="pic_li"
+content_front=ihref="
+content_back="
+title_front=data-title="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[tinypic.com]
+type=image
+url=http://de.tinypic.com/search.php?page=1&tag=%search%&type=images
+seperator=<li><a href="
+content_front=value="[IMG]
+content_back=[
+author_front=Uploaded by
+author_back=" "
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[tumblr]
+type=image
+url=https://www.tumblr.com/search/%search%
+seperator=data-lightbox='
+content_front=high_res":"
+content_back="
+content_replace=\/;/
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[turbosquid]
+type=image
+url=https://www.turbosquid.com/3d-model/%search%?page_num=1
+seperator=<div id="Asset-
+content_front=large_url="
+content_back="
+title_front=alt="
+title_back="
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Twitter]
+type=image
+url=https://twitter.com/i/search/timeline?f=images&vertical=default&q=%search%&include_available_features=0&include_entities=0
+seperator=[
+content_front1=data-url=\"
+content_back="
+content_remove=\
+author_front=data-name=\"
+author_back=\"
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[unsplash]
+type=image
+url=https://unsplash.com/search/%search%
+seperator="id":
+content_front1=raw": "|raw":"|"regular":"|"full":"
+content_back="
+content_replace=\u002F;/
+author_front=,"name":"|"username":"|"first_name":"|twitter_username":"
+author_back="
+title_front=tags":[{"title":"|title":"
+title_back="
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[uploadix.de]
+type=image
+url=https://uploadix.de/json/?q=%search%&action=list&list=images&sort=&page=1
+seperator=<div class=\"list-item-image\">
+content_front=<img src=\"
+content_back=\"
+content_replace=\/;/|.md.pnj;.png|.md.jpg;.jpg|.md.gif;.gif|.md.jpeg|.jpeg
+author_front=Uploaded by
+author_back=" "
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Wikimedia]
+type=image
+url=https://commons.wikimedia.org/w/index.php?title=Special:Search&limit=20&offset=0&profile=default&search=%search%
+seperator=<table class='searchResultImage'>
+content_front=<img alt="" src="
+content_back="
+content_replace=/thumb/;/|.jpg/.*;.jpg||.jpeg/.*;.jpeg|.png/.*;.png|.gif/.*;.gif
+title_front=<div class='searchresult'>|title="File:
+title_back=</div>|.jpg"|.gif"|.jpeg"|.png"
+title_remove=Description
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Yahoo Image Search]
+type=image
+url=https://images.search.yahoo.com/search/images?ei=UTF-8&p=%search%&b=1&vm=r&imgl=fmsuc&_guc_consent_skip=1543312482
+seperator=<li class="ld
+content_front1=iurl":"
+content_back="
+content_remove=\
+title_front=alt":"
+title_back="
+title_replace="_; "
+title_remove=\u.*;\
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Yandex Image Search]
+type=image
+url=https://yandex.com/images/search?text=%search%&p=0
+seperator=serp-item_pos_
+content_front1=img_href":"
+content_back="
+content_remove=\
+title_front=title":"|text":"
+title_back="
+title_remove=<b>;</b>
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[Yippy.com]
+type=image
+url=https://yippy.com/ysa/cgi-bin/query-meta?v%3Asources=yippy-images&v%3Aproject=yippy-com-images&query=%search%
+seperator=<div class="media-box
+content_front=data-src="
+content_back="
+title_front=data-title='
+title_back='
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[YouTube.com]
+type=image
+url=https://www.youtube.com/results?filters=video&search_query=%search%&lclk=video
+seperator="videoRenderer":
+content_front1=thumbnails":
+content_front2="url":
+content_front3="
+content_back="|&|?
+author_front="/user/
+author_back1="
+title_front1="simpleText":
+title_front2="
+title_back="
+result=<img src="%content%" alt="%title%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
+
+[zapmeta]
+type=image
+url=https://www.zapmeta.com/image?q=%search%&page=1
+seperator=<li class=\"image\">|<li class="image">
+content_front1=<img src=\"|<img src="
+content_back=\"|"
+content_replace=\;|&amp;&|\/;/|&width=;&width=1
+title_front=:\/\/|http://|https://
+title_back=\|/|?|"
+result=<img src="%content%" style="max-width:4{1|2|3|4|5|0|0|0}0px;float:{#left left|#left left|#left left|#left left|#right right};padding:{#right 10px 0px 10px 10px|#left 10px 10px 10px 0px};border:0px;">
