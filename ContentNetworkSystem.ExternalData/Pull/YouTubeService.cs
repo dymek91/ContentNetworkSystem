@@ -1,6 +1,6 @@
 ﻿using HtmlAgilityPack;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Localization.Internal;
+//using Microsoft.Extensions.Localization.Internal;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -13,9 +13,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3.Data;
-using ContentNetworkSystem.Data.GoogleSearchCache;
-using ContentNetworkSystem.Models;
 using ContentNetworkSystem.Models.GoogleSearchCache;
+using ContentNetworkSystem.Models;
+using ContentNetworkSystem.Data.GoogleSearchCache;
 
 namespace ContentNetworkSystem.Pull
 {

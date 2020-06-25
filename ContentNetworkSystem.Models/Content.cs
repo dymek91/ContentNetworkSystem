@@ -23,8 +23,14 @@ namespace ContentNetworkSystem.Models
         [JsonIgnore]
         public Project Project { get; set; }
 
-        public abstract Task PushContent(IServiceProvider serviceProvider, IHttpClientFactory clientFactory);
-        public abstract void EncryptPassword(EncryptionService encryptionService);
+        public virtual Task PushContent(IServiceProvider serviceProvider, IHttpClientFactory clientFactory)
+        {
+            throw new NotImplementedException();
+        }
+        public virtual void EncryptPassword(IServiceProvider serviceProvider)
+        {
+            throw new NotImplementedException();
+        }
 
     }
 }

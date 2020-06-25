@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ContentNetworkSystem.Data;
 using ContentNetworkSystem.Models;
+using ContentNetworkSystem.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using ContentNetworkSystem.ModelsExtensions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,9 +37,9 @@ namespace ContentNetworkSystem.Controllers
         // POST api/<ProjectsController>
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "ProjectsAdd, ProjectsManage")]
-        public async Task<ActionResult> Post([FromBody] Project project, [FromServices] EncryptionService encryptionService, [FromServices] IProjectsService projectsService)
+        public async Task<ActionResult> Post([FromBody] Project project, [FromServices] IServiceProvider serviceProvider, [FromServices] IProjectsService projectsService)
         {
-            project.Content.EncryptPassword(encryptionService);
+            project.Content.EncryptPassword(serviceProvider);
             await projectsService.AddAsync(project);
             return Ok("Ok");
         }

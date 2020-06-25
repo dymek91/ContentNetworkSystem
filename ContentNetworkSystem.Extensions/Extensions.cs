@@ -1,4 +1,5 @@
-﻿using System;
+﻿//using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +29,6 @@ namespace ContentNetworkSystem
                     break;
                 yield return index;
             }
-        }
+        } 
     }
 }

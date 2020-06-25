@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ContentNetworkSystem.Models.GoogleSearchCache;
+using ContentNetworkSystem.Models;
 using Microsoft.EntityFrameworkCore;
 using Z.EntityFramework.Plus;
 

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using ContentNetworkSystem.Data;
+using ContentNetworkSystem.Models; 
 using ContentNetworkSystem.Models;
 using Microsoft.EntityFrameworkCore;
 using Z.EntityFramework.Plus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
+using ContentNetworkSystem.ModelsExtensions;
 
 namespace ContentNetworkSystem.Data
 {
@@ -61,7 +62,7 @@ namespace ContentNetworkSystem.Data
                         project.WasSuccess = true;
                         try
                         {
-                            await content.PushContent(_serviceProvider, _httpClientFactory);
+                            await  content.PushContent(_serviceProvider, _httpClientFactory) ;
                         }
                         catch(Exception e)
                         {

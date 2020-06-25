@@ -10,31 +10,47 @@ using ContentNetworkSystem.Pull;
 using ContentNetworkSystem.Pull.Models;
 using Z.EntityFramework.Extensions.Internal;
 using ContentNetworkSystem.Models.GoogleSearchCache;
+using ContentNetworkSystem.Models;
 
-namespace ContentNetworkSystem.Models
+namespace ContentNetworkSystem.ModelsExtensions
 {
-    public class Wordpress : Content
-    { 
-        public int? TextGenerationCategoryId { get; set; }
-        public int? BlogId { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public bool? AddThumbnail { get; set; } = false;
-        public string ImagesCount { get; set; }
-        public string VideosCount { get; set; }
-        public string AuthorityLinksCount { get; set; } 
+    public static class WordpressExtension
+    {
+       
+        //public static void EncryptPassword(this Content wordpressCon, IServiceProvider serviceProvider)
+        //{
+        //    if (wordpressCon.GetType() == typeof(Wordpress))
+        //    {
+        //        EncryptPassword((Wordpress)wordpressCon, serviceProvider);
+        //    }
+        //}
+        //public static async Task PushContent(this Content wordpressCon, IServiceProvider serviceProvider, IHttpClientFactory clientFactory)
+        //{
+        //    if (wordpressCon.GetType() == typeof(Wordpress))
+        //    {
+        //        await PushContent((Wordpress)wordpressCon, serviceProvider, clientFactory);
+        //    }
+        //}
 
-        public override void EncryptPassword(EncryptionService encryptionService)
+        public static  void EncryptPassword(Wordpress wordpress, IServiceProvider serviceProvider) 
         {
-            Password = encryptionService.EncryptString(Password);
+            //Wordpress wordpress = (Wordpress)wordpressCon;
+            EncryptionService encryptionService = serviceProvider.GetService<EncryptionService>();
+            wordpress.Password = encryptionService.EncryptString(wordpress.Password);
         }
-
-        public override async  Task PushContent(IServiceProvider serviceProvider, IHttpClientFactory clientFactory)
+        //public static async Task PushContent(this Content wordpressCon, IServiceProvider serviceProvider, IHttpClientFactory clientFactory)
+        //{
+        //    throw new NotImplementedException();
+        //}
+        public static async  Task PushContent(Wordpress wordpress, IServiceProvider serviceProvider, IHttpClientFactory clientFactory) 
+            
         { 
             Console.WriteLine("Pushing wordpress content");
 
+            //Wordpress wordpress = (Wordpress)wordpressCon;
+
             int blogId = 1;
-            if (BlogId.HasValue) { blogId = BlogId.Value; }
+            if (wordpress.BlogId.HasValue) { blogId = wordpress.BlogId.Value; }
 
             var wordpressService =  serviceProvider.GetService<WordpressService>();
             var textGenerationService = serviceProvider.GetService<TextGenerationService>();
@@ -42,24 +58,24 @@ namespace ContentNetworkSystem.Models
             var googleImagesService = serviceProvider.GetService<GoogleImagesService>();
             var randomContentService = serviceProvider.GetService<RandomContentService>();
 
-            TextJSON textJSON = await textGenerationService.GetText(TextGenerationCategoryId.Value);
+            TextJSON textJSON = await textGenerationService.GetText(wordpress.TextGenerationCategoryId.Value);
             string postTitle = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(textJSON.SuggestedTitle));  
             string postContent= System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(textJSON.Text));
-            string password = encryptionService.DecryptString(Password);
+            string password = encryptionService.DecryptString(wordpress.Password);
 
             //ADD AUTHORITY LINKS
-            int authorityLinksToAdd = GetCountFromMask(AuthorityLinksCount);
+            int authorityLinksToAdd = GetCountFromMask(wordpress.AuthorityLinksCount);
             if (authorityLinksToAdd > 0)
             {
                 postContent = randomContentService.InsertLinksToText(postContent, authorityLinksToAdd);
             } 
 
-            if (Project.Niche == null)
+            if (wordpress.Project.Niche == null)
             {
                 wordpressService.PushPost(
-                    user: Username,
+                    user: wordpress.Username,
                     pass: password,
-                    baseUrl: Url,
+                    baseUrl: wordpress.Url,
                     blogId: blogId,
                     postTitle: postTitle,
                     postContent: postContent);
@@ -67,42 +83,42 @@ namespace ContentNetworkSystem.Models
             } 
 
             //ADD VIDEO
-            int videosToAdd = GetCountFromMask(VideosCount);
+            int videosToAdd = GetCountFromMask(wordpress.VideosCount);
             if (videosToAdd>0)
             {
-                postContent = await randomContentService.InsertVideosToText(Project.Niche, postContent, videosToAdd);
+                postContent = await randomContentService.InsertVideosToText(wordpress.Project.Niche, postContent, videosToAdd);
             }
 
             //ADD IMAGES 
-            int imagesToAdd = GetCountFromMask(ImagesCount); 
+            int imagesToAdd = GetCountFromMask(wordpress.ImagesCount); 
               
             if (imagesToAdd > 0)
             {
-                postContent = await randomContentService.InsertImagesToText(Project.Niche, postContent, imagesToAdd);
+                postContent = await randomContentService.InsertImagesToText(wordpress.Project.Niche, postContent, imagesToAdd);
             }
 
             //SEND POST
             var postId = wordpressService.PushPost(
-                user: Username,
+                user: wordpress.Username,
                 pass: password,
-                baseUrl: Url,
+                baseUrl: wordpress.Url,
                 blogId:blogId,
                 postTitle:postTitle,
                 postContent: postContent);
 
             //ADD THUMBNAIL
-            if(AddThumbnail.HasValue)
+            if(wordpress.AddThumbnail.HasValue)
             {
-                if(AddThumbnail.Value)
+                if(wordpress.AddThumbnail.Value)
                 {
-                    var images = await googleImagesService.SearchImages_Api(Project.Niche, 1);
+                    var images = await googleImagesService.SearchImages_Api(wordpress.Project.Niche, 1);
                     if (images.Count>0)
                     {
                         var imageThumbnail = images[0];
                         var fileId = wordpressService.UploadImage(
-                            user: Username,
+                            user: wordpress.Username,
                             pass: password,
-                            baseUrl: Url,
+                            baseUrl: wordpress.Url,
                             blogId: blogId,
                             imageUrl: imageThumbnail.Url,
                             maxHeight: 320,
@@ -111,9 +127,9 @@ namespace ContentNetworkSystem.Models
                         if (fileId != "-1")
                         {
                             wordpressService.EditPostThumbnail(
-                                user: Username,
+                                user: wordpress.Username,
                                 pass: password,
-                                baseUrl: Url,
+                                baseUrl: wordpress.Url,
                                 blogId: blogId,
                                 postId: postId,
                                 imageId: fileId);
@@ -124,7 +140,7 @@ namespace ContentNetworkSystem.Models
 
         }
 
-        private int GetCountFromMask(string countMask)
+        private static int GetCountFromMask(string countMask)
         {
             int count = 0;
             if(countMask!=null)
