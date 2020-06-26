@@ -8,6 +8,7 @@
 @using ContentNetworkSystem.Models
 @using ContentNetworkSystem.Models.ViewModels
 @inject IProjectsService projectsService
+@inject IGroupsService groupsService
 
 <h1>Projects</h1>
 
@@ -34,6 +35,16 @@ else
                     <option value="null">All</option>
                     <option value="true">Active</option>
                     <option value="false">Disabled</option>
+                </InputSelect>
+            </label>
+            <label class="col-form-label">
+                Group:
+                <InputSelect class="form-control" @bind-Value="viewModel.Filters.GroupId" @oninput="@(args => OnGroupChange(args))" type="text">
+                    <option value="null">All</option>
+                    @foreach (var group in groups)
+                        {
+                        <option value="@group.ID.ToString()">@group.Name.ToString()</option>
+                        }
                 </InputSelect>
             </label>
         </div>
@@ -134,11 +145,15 @@ else
 
     ICollection<Project> projects;
 
+    List<Group> groups = new List<Group>();
+
     ProjectsViewModel viewModel = new ProjectsViewModel();
 
     protected override async Task OnInitializedAsync()
     {
         projects = await projectsService.GetAsync();
+        groups = await groupsService.GetAsync();
+        if (groups == null) groups = new List<Group>();
     }
 
     private void NavigateToAdd()
@@ -176,14 +191,21 @@ else
 
         await ViewChange();
     }
+    private async Task OnGroupChange(ChangeEventArgs args)
+    {
+        viewModel.Filters.GroupId = (string)args.Value;
+
+        await ViewChange();
+    }
 
     private async Task ViewChange()
     {
-        Console.WriteLine("WasSuccess: {0} | Active: {1}", viewModel.Filters.WasSuccess, viewModel.Filters.Active);
+        Console.WriteLine("WasSuccess: {0} | Active: {1} | Group: {2}", viewModel.Filters.WasSuccess, viewModel.Filters.Active,viewModel.Filters.GroupId);
 
         projects = await projectsService.GetAsync(
                 wasSuccess: viewModel.Filters.GetWasSuccess(),
-                active: viewModel.Filters.GetActive());
+                active: viewModel.Filters.GetActive(),
+                groupId: viewModel.Filters.GetGroupId());
 
         StateHasChanged();
     }

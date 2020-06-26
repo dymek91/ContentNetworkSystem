@@ -9,7 +9,7 @@ namespace ContentNetworkSystem.Data
 {
     public interface IProjectsService
     {
-        Task<List<Project>> GetAsync(bool? wasSuccess = null, bool? active = null);
+        Task<List<Project>> GetAsync(bool? wasSuccess = null, bool? active = null, int? groupId = null);
         Task<Project> GetAsync(int projectId);
         Task<Project> AddAsync(Project project);
         Task<Project> UpdateAsync(Project project);
@@ -44,7 +44,7 @@ namespace ContentNetworkSystem.Data
             
         }
 
-        public async Task<List<Project>> GetAsync(bool? wasSuccess=null,bool? active=null)
+        public async Task<List<Project>> GetAsync(bool? wasSuccess=null,bool? active=null, int? groupId = null)
         {
             //var projects = await _context.Projects.ToListAsync();
             //var projects =  _context.Projects;
@@ -55,6 +55,7 @@ namespace ContentNetworkSystem.Data
 
             if (wasSuccess.HasValue) projectsQuery = projectsQuery.Where(e => e.WasSuccess == wasSuccess.Value);
             if (active.HasValue) projectsQuery = projectsQuery.Where(e => e.Active == active.Value);
+            if (groupId.HasValue) projectsQuery = projectsQuery.Where(e => e.GroupId == groupId.Value);
 
             var projects = await projectsQuery.ToListAsync();
 

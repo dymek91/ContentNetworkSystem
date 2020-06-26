@@ -8,6 +8,7 @@
 @using ContentNetworkSystem.Models.ViewModels
 @inject IProjectsService projectsService
 @inject IContentsService contentsService
+@inject IGroupsService groupsService
 
 <h3>Add Projects</h3>
 <hr />
@@ -32,12 +33,29 @@
             <div class="form-group">
                 <label>
                     Content Type:
-                    <InputSelect class="form-control"  @bind-Value="contentModelTypeName">
+                    <InputSelect class="form-control" @bind-Value="contentModelTypeName">
                         @foreach (var content in availableContent.GetContents())
                         {
-                        <option value=@content.TypeName>@content.TypeName</option>
+                            <option value=@content.TypeName>@content.TypeName</option>
                         }
                     </InputSelect>
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    Choose Group:
+                    <InputSelect class="form-control" @bind-Value="groupSelect" @oninput="@(args => OnGroupChange(args))" type="text">
+                        @foreach (var group in availableGroups)
+                        {
+                            <option value=@group.Name>@group.Name</option>
+                        }
+                    </InputSelect>
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    Choosen Group (can type new):
+                    <InputText class="form-control" id="groupName" @bind-Value="groupName"></InputText>
                 </label>
             </div>
             <div class="form-group">
@@ -52,10 +70,22 @@
     private Project projectModel = new Project();
     private AvailableContent availableContent = new AvailableContent();
     private string contentModelTypeName = "";
+    private List<Group> availableGroups = new List<Group>();
+    private string groupSelect = "";
+    private string groupName = "";
 
     private int freqHours;
 
     //string TimeProxy { get => projectModel.Frequency.ToString(); set => TimeSpan.TryParse(value,out projectModel.Frequency); }
+
+    protected override async Task OnInitializedAsync()
+    {
+        availableGroups = await groupsService.GetAsync();
+        if(availableGroups ==null)
+        {
+            availableGroups = new List<Group>();
+        }
+    }
 
     private async Task HandleValidSubmitAsync()
     {
@@ -67,9 +97,23 @@
             content.Name = content.TypeName;
             projectModel.Content = content;
         }
+        if(groupName.Length>0)
+        {
+            Group group = new Group();
+            group.Name = groupName;
+            group = await groupsService.AddAsync(group);
+            projectModel.Group = group;
+        }
         await projectsService.AddAsync(projectModel);
         NavigationManager.NavigateTo("Projects/Index");
     }
+    private async Task OnGroupChange(ChangeEventArgs args)
+    {
+        Console.WriteLine("OnGroupChange");
+
+        groupName = (string)args.Value;   
+    }
+
 
     private void NavigateToProjects()
     {

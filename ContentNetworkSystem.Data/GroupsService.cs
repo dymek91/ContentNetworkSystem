@@ -11,6 +11,7 @@ namespace ContentNetworkSystem.Data
     {
         Task<List<Group>> GetAsync();
         Task<Group> GetAsync(int groupId);
+        Task<Group> GetAsync(string name);
         Task<Group> AddAsync(Group group);
         Task<Group> UpdateAsync(Group group);
         Task DeleteAsync(Group group);
@@ -26,8 +27,15 @@ namespace ContentNetworkSystem.Data
 
         public async Task<Group> AddAsync(Group group)
         {
-            await _context.Groups.AddAsync(group);
-            await _context.SaveChangesAsync();
+            if (! await _context.Groups.Where(e => e.Name == group.Name).AnyAsync())
+            {
+                await _context.Groups.AddAsync(group); 
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                group = await GetAsync(group.Name);
+            }
             return group;
         }
 
@@ -50,6 +58,16 @@ namespace ContentNetworkSystem.Data
                 return null;
             }
 
+            return group;
+        }
+
+        public async Task<Group> GetAsync(string name)
+        {
+            Group group = null;
+            if (await _context.Groups.Where(e => e.Name == name).AnyAsync())
+            {
+                group = await _context.Groups.Where(e => e.Name == name).FirstAsync();
+            }
             return group;
         }
 

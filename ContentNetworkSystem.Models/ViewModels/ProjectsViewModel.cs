@@ -14,6 +14,7 @@ namespace ContentNetworkSystem.Models.ViewModels
     {
         public string WasSuccess { get; set; } = "null";
         public string Active { get; set; } = "null";
+        public string GroupId { get; set; } = "null";
 
         public bool? GetWasSuccess()
         {
@@ -23,6 +24,11 @@ namespace ContentNetworkSystem.Models.ViewModels
         public bool? GetActive()
         {
             return bool.TryParse(Active, out bool tmp) ? (bool?)tmp : null;
+        }
+
+        public int? GetGroupId()
+        {
+            return int.TryParse(GroupId, out int tmp) ? (int?)tmp : null;
         }
     }
 }

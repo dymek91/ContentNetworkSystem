@@ -7,6 +7,7 @@
 @using ContentNetworkSystem.Models
 @inject IProjectsService projectsService
 @inject INichesService nichesService
+@inject IGroupsService groupsService
 
 <h3>Edit Projects</h3>
 <hr />
@@ -45,14 +46,31 @@ else
                         }
                         else
                         {
-                    <InputSelect class="form-control" @bind-Value="nicheId" @oninput="@(args => OnNicheChange(args))" type="text">
-                        <option value="None">None</option>
-                        @foreach (var niche in niches)
-                                {
-                            <option value=@niche.ID.ToString()>@niche.ID.ToString() : @niche.Name</option>
-                                }
-                    </InputSelect>
+                            <InputSelect class="form-control" @bind-Value="nicheId" @oninput="@(args => OnNicheChange(args))" type="text">
+                                <option value="None">None</option>
+                                @foreach (var niche in niches)
+                                        {
+                                    <option value=@niche.ID.ToString()>@niche.ID.ToString() : @niche.Name</option>
+                                        }
+                            </InputSelect>
                         }
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Choose Group:
+                        <InputSelect class="form-control" @bind-Value="groupSelect" @oninput="@(args => OnGroupChange(args))" type="text">
+                            @foreach (var group in availableGroups)
+                                {
+                                <option value=@group.Name>@group.Name</option>
+                                }
+                        </InputSelect>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Choosen Group (can type new):
+                        <InputText class="form-control" id="groupName" @bind-Value="groupName"></InputText>
                     </label>
                 </div>
                 <div class="form-group">
@@ -68,7 +86,7 @@ else
                 </div>
 
 
-            </EditForm> 
+            </EditForm>
         </div>
     </div>
 }
@@ -84,7 +102,11 @@ else
     private int freqHours;
 
     ICollection<Niche> niches;
-    string  nicheId;
+    string nicheId;
+
+    private List<Group> availableGroups = new List<Group>();
+    private string groupSelect = "";
+    private string groupName = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -93,12 +115,31 @@ else
         nameOldValue = projectModel.Name;
         activeOldValue = projectModel.Active;
         niches = await nichesService.GetAsync();
+
+        availableGroups = await groupsService.GetAsync();
+        if (availableGroups == null)
+        {
+            availableGroups = new List<Group>();
+        }
+        if(projectModel.Group != null)
+        {
+            groupName = projectModel.Group.Name;
+        }
     }
 
     private async Task HandleValidSubmitAsync()
     {
         Console.WriteLine("OnValidSubmit");
         projectModel.Frequency = TimeSpan.FromHours(freqHours);
+
+        if (groupName.Length > 0)
+        {
+            Group group = new Group();
+            group.Name = groupName;
+            group = await groupsService.AddAsync(group);
+            projectModel.Group = group;
+        }
+
         await projectsService.UpdateAsync(projectModel);
         NavigationManager.NavigateTo("Projects/Index");
     }
@@ -112,7 +153,7 @@ else
 
     private void NavigateToContentEdit()
     {
-        NavigationManager.NavigateTo("Contents/"+projectModel.Content.TypeName+"/Edit/"+projectModel.Content.ID);
+        NavigationManager.NavigateTo("Contents/" + projectModel.Content.TypeName + "/Edit/" + projectModel.Content.ID);
     }
     private async Task OnNicheChange(ChangeEventArgs args)
     {
@@ -125,6 +166,12 @@ else
         {
             projectModel.NicheId = int.Parse((string)args.Value);
         }
+    }
+    private async Task OnGroupChange(ChangeEventArgs args)
+    {
+        Console.WriteLine("OnGroupChange");
+
+        groupName = (string)args.Value;
     }
 
 }
