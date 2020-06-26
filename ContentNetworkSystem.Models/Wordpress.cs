@@ -1,17 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-//using ContentNetworkSystem.Push;
-//using ContentNetworkSystem.Pull;
-//using ContentNetworkSystem.Pull.Models;
-//using Z.EntityFramework.Extensions.Internal;
-using ContentNetworkSystem.Models.GoogleSearchCache;
-
-namespace ContentNetworkSystem.Models
+﻿namespace ContentNetworkSystem.Models
 {
     public class Wordpress : Content
     { 

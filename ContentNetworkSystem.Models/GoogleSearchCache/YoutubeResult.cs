@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ContentNetworkSystem.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace ContentNetworkSystem.Models.GoogleSearchCache
 {

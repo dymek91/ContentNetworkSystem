@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentNetworkSystem.Extens
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentNetworkSystem.Data.GoogleSearchCache", "ContentNetworkSystem.Data.GoogleSearchCache\ContentNetworkSystem.Data.GoogleSearchCache.csproj", "{F1ADED99-C395-41A6-94BA-A212BA708250}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentNetworkSystem.Data.Context", "ContentNetworkSystem.Data.Context\ContentNetworkSystem.Data.Context.csproj", "{75655691-499C-4CC4-A783-9518CFB66964}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentNetworkSystem.Data.Context", "ContentNetworkSystem.Data.Context\ContentNetworkSystem.Data.Context.csproj", "{75655691-499C-4CC4-A783-9518CFB66964}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentNetworkSystem.Client", "ContentNetworkSystem.Client\ContentNetworkSystem.Client.csproj", "{79E95A88-EF2C-436E-84E5-AF6B51C8845E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{75655691-499C-4CC4-A783-9518CFB66964}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75655691-499C-4CC4-A783-9518CFB66964}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75655691-499C-4CC4-A783-9518CFB66964}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79E95A88-EF2C-436E-84E5-AF6B51C8845E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79E95A88-EF2C-436E-84E5-AF6B51C8845E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79E95A88-EF2C-436E-84E5-AF6B51C8845E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79E95A88-EF2C-436E-84E5-AF6B51C8845E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

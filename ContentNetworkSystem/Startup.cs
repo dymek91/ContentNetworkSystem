@@ -91,7 +91,7 @@ namespace ContentNetworkSystem
                   {
                       options.SerializerSettings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Objects;
                       options.SerializerSettings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
-                      options.SerializerSettings.SerializationBinder = new MyCustomSerializationBinder();
+                      //options.SerializerSettings.SerializationBinder = new MyCustomSerializationBinder();
                    });
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>(); 

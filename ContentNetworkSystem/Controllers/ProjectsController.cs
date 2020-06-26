@@ -40,8 +40,8 @@ namespace ContentNetworkSystem.Controllers
         public async Task<ActionResult> Post([FromBody] Project project, [FromServices] IServiceProvider serviceProvider, [FromServices] IProjectsService projectsService)
         {
             project.Content.EncryptPassword(serviceProvider);
-            await projectsService.AddAsync(project);
-            return Ok("Ok");
+            project = await projectsService.AddAsync(project);
+            return Ok(project);
         }
 
         // PUT api/<ProjectsController>/5

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Net.Http;
+﻿using System.ComponentModel.DataAnnotations;
 //using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
@@ -23,14 +17,14 @@ namespace ContentNetworkSystem.Models
         [JsonIgnore]
         public Project Project { get; set; }
 
-        public virtual Task PushContent(IServiceProvider serviceProvider, IHttpClientFactory clientFactory)
-        {
-            throw new NotImplementedException();
-        }
-        public virtual void EncryptPassword(IServiceProvider serviceProvider)
-        {
-            throw new NotImplementedException();
-        }
+        //public virtual Task PushContent(IServiceProvider serviceProvider, IHttpClientFactory clientFactory)
+        //{
+        //    throw new NotImplementedException();
+        //}
+        //public virtual void EncryptPassword(IServiceProvider serviceProvider)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
     }
 }
