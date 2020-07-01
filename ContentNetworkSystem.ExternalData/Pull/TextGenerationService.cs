@@ -77,5 +77,42 @@ namespace ContentNetworkSystem.Pull
 
             return textJSON;
         }
+        //id: name
+        public async Task<Dictionary<string,string>> GetGenerators()
+        {
+            using (var httpClient = _clientFactory.CreateClient())
+            {
+                using (var response = await httpClient.GetStreamAsync(Configuration.GetValue<string>("TextGenerationHost") + "api/generators"))
+                {
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    Dictionary<string, string> gensDict = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(response, options);
+                    return gensDict;
+                }
+            }
+        }
+        //id: <id, name>
+        public async Task<Dictionary<string, Dictionary<string, string>>> GetGeneratorsWithCategories()
+        {
+            using (var httpClient = _clientFactory.CreateClient())
+            {
+                Dictionary<string, string> gensDict = new Dictionary<string, string>();
+                Dictionary<string, Dictionary<string, string>> gensDictWithCats = new Dictionary<string, Dictionary<string, string>>();
+                using (var response = await httpClient.GetStreamAsync(Configuration.GetValue<string>("TextGenerationHost") + "api/generators"))
+                {
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    gensDict = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(response, options); 
+                }
+                foreach (var genDict in gensDict)
+                {
+                    using (var response = await httpClient.GetStreamAsync(Configuration.GetValue<string>("TextGenerationHost") + "api/categories/" + genDict.Key))
+                    {
+                        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                        var genCats = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(response, options);
+                        gensDictWithCats.Add(genDict.Key, genCats);
+                    }
+                }
+                return gensDictWithCats;
+            }
+        }
     }
 }

@@ -1,5 +1,49 @@
-﻿<h3>Details</h3>
+﻿@page "/Niches/Details/{nicheId:int}"
+
+@attribute [Authorize]
+
+@inject NavigationManager NavigationManager
+@using ContentNetworkSystem.Data
+@using ContentNetworkSystem.Models
+@inject INichesService nichesService
+
+<h3>Niche Details</h3>
+<hr />
+@if (nicheModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <di>
+        <div class="row">
+            @foreach (var property in nicheModel.GetType().GetProperties())
+            {
+                <dt class="col-sm-2">
+                    @property.Name
+                </dt>
+                <dd class="col-sm-10">
+                    @property.GetValue(nicheModel)
+                </dd>
+            }
+        </div>
+    </di>
+    <button class="btn btn-primary" type="button" @onclick="NavigateToNiches">Go Back</button>
+}
 
 @code {
+    [Parameter]
+    public int NicheId { get; set; }
 
+    private Niche nicheModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        nicheModel = await nichesService.GetAsync(NicheId);
+    }
+
+    private void NavigateToNiches()
+    {
+        NavigationManager.NavigateTo("Niches/Index");
+    }
 }

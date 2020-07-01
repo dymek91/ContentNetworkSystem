@@ -5,7 +5,9 @@
 @inject NavigationManager NavigationManager
 @using ContentNetworkSystem.Data
 @using ContentNetworkSystem.Models
+@using ContentNetworkSystem.Pull
 @inject INichesService nichesService
+@inject TextGenerationService textGenerationService
 
 <h3>Edit Niche</h3>
 <hr />
@@ -24,6 +26,58 @@ else
                     <label>
                         Niche Name:
                         <InputText class="form-control" id="name" @bind-Value="nicheModel.Name" />
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Text Generator:
+                        @if (textGenerators == null)
+                        {
+                            <InputSelect class="form-control" @bind-Value="textGeneratorCatId" disabled></InputSelect>
+                        }
+                        else
+                        {
+                            <InputSelect class="form-control" @bind-Value="textGeneratorCatId" @oninput="@(args => OnTextGeneratorCategoryChange(args))" type="text">
+                                <option value="None">None</option>
+                                @foreach (var textGeneratorWithCategory in textGeneratorsWithCategories)
+                                        {
+                                            var textGeneratorName = textGenerators[textGeneratorWithCategory.Key];
+                                            var textGeneratorCategories = textGeneratorWithCategory.Value;
+                                    <option value="None">@textGeneratorWithCategory.Key: @textGeneratorName</option>
+                                    @foreach (var textGeneratgorCategory in textGeneratorCategories)
+                                            {
+                                        <option value=@textGeneratgorCategory.Key>|-@textGeneratgorCategory.Key: @textGeneratgorCategory.Value</option>
+                                            }
+                                        }
+                            </InputSelect>
+                        }
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Text Generator (Low Quality):
+                        @if (textGenerators == null)
+                        {
+                            <InputSelect class="form-control" @bind-Value="textGeneratorLowQCatId" disabled></InputSelect>
+                        }
+                        else
+                        {
+                            <InputSelect class="form-control" @bind-Value="textGeneratorLowQCatId" @oninput="@(args => OnTextGeneratorLowQCategoryChange(args))" type="text">
+                                <option value="None">None</option>
+                                @foreach (var textGeneratorWithCategory in textGeneratorsWithCategories)
+                                        {
+                                            var textGeneratorName = textGenerators[textGeneratorWithCategory.Key];
+                                            var textGeneratorCategories = textGeneratorWithCategory.Value;
+                                    <option value="None">@textGeneratorWithCategory.Key: @textGeneratorName</option>
+                                    @foreach (var textGeneratgorCategory in textGeneratorCategories)
+                                            {
+                                        <option value=@textGeneratgorCategory.Key>|-@textGeneratgorCategory.Key: @textGeneratgorCategory.Value</option>
+                                            }
+                                        }
+                            </InputSelect>
+                        }
                     </label>
                 </div>
 
@@ -80,12 +134,29 @@ else
     private object nameOldValue;
     private object activeOldValue;
     private List<ContentNetworkSystem.Models.Keyword> keywords;
+    private string textGeneratorCatId;
+    private string textGeneratorLowQCatId;
+
+    private Dictionary<string,string> textGenerators;
+    private Dictionary<string, Dictionary<string, string>> textGeneratorsWithCategories;
 
     protected override async Task OnInitializedAsync()
     {
         nicheModel = await nichesService.GetAsync(NicheId);
         keywords = await nichesService.GetKeywordsAsync(nicheModel);
         nameOldValue = nicheModel.Name;
+
+        textGenerators = await textGenerationService.GetGenerators();
+        textGeneratorsWithCategories = await textGenerationService.GetGeneratorsWithCategories();
+
+        if(nicheModel.TextGenerationCategoryId.HasValue)
+        {
+            textGeneratorCatId = nicheModel.TextGenerationCategoryId.Value.ToString();
+        }
+        if (nicheModel.TextGenerationLowQCategoryId.HasValue)
+        {
+            textGeneratorLowQCatId = nicheModel.TextGenerationLowQCategoryId.Value.ToString();
+        }
     }
 
     private async Task HandleValidSubmitAsync()
@@ -117,6 +188,31 @@ else
     {
         nicheModel.Name = (string)nameOldValue;
         NavigationManager.NavigateTo("Keywords/Delete/" + keywordId);
+    }
+
+    private async Task OnTextGeneratorCategoryChange(ChangeEventArgs args)
+    {
+        Console.WriteLine("OnTextGeneratorCategoryChange");
+        if ((string)args.Value == "None")
+        {
+            nicheModel.TextGenerationCategoryId = null;
+        }
+        else
+        {
+            nicheModel.TextGenerationCategoryId = int.Parse((string)args.Value);
+        }
+    }
+    private async Task OnTextGeneratorLowQCategoryChange(ChangeEventArgs args)
+    {
+        Console.WriteLine("OnTextGeneratorLowQCategoryChange");
+        if ((string)args.Value == "None")
+        {
+            nicheModel.TextGenerationLowQCategoryId = null;
+        }
+        else
+        {
+            nicheModel.TextGenerationLowQCategoryId = int.Parse((string)args.Value);
+        }
     }
 
 }

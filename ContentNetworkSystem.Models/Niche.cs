@@ -10,6 +10,8 @@ namespace ContentNetworkSystem.Models
         public int ID { get; set; }
         [Required]
         public string Name { get; set; }
+        public int? TextGenerationCategoryId { get; set; }
+        public int? TextGenerationLowQCategoryId { get; set; }
 
         [JsonIgnore]
         public ICollection<Project> Projects { get; set; }
