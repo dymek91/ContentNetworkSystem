@@ -19,6 +19,9 @@
 }
 else
 {
+    <div>
+        Total Count: @projectsCount | Page: @viewModel.PageIndex / @viewModel.TotalPages
+    </div>
     <EditForm Model="@viewModel">
         <div class="form-group">
             <label class="col-form-label">
@@ -68,72 +71,85 @@ else
         <tbody>
             @foreach (var project in projects)
             {
-            <tr>
-                <td @onclick="@(e => NavigateToDetails(project.ID))">@project.Name</td>
-                @if (project.Niche != null)
-                {
-                    <td>@project.Niche.Name</td>
-                }
-                else
-                {
-                    <td>None</td>
-                }
-                @if (project.Group != null)
-                {
-                    <td>@project.Group.Name</td>
-                }
-                else
-                {
-                    <td>None</td>
-                }
-                @if (project.Content != null)
-                {
-                    <td @onclick="@(e => NavigateToWordpressDetails(project.Content.ID))">@project.Content.TypeName</td>
-                }
-                else
-                {
-                    <td>None</td>
-                }
-                <td>@project.DateAdded</td>
-                @if (project.Frequency != null)
-                {
-                    <td>@project.Frequency</td>
-                }
-                else
-                {
-                    <td>None</td>
-                }
-                @if (project.LastPushed != null)
-                {
-                    <td>@project.LastPushed</td>
-                }
-                else
-                {
-                    <td>None</td>
-                }
-                @if (project.WasSuccess.HasValue)
-                {
-                    <td>@(project.WasSuccess.Value ? "Success" : "Failed")</td>
-                }
-                else
-                {
-                    <td>None</td>
-                }
-                @if (project.Active)
-                {
-                    <td>Active</td>
-                }
-                else
-                {
-                    <td>Disabled</td>
-                }
-                <td><input type="button" class="btn btn-primary" @onclick="@(e => NavigateToEdit(project.ID))" value="Edit" /></td>
-                <td><input type="button" class="btn btn-danger" @onclick="@(e => NavigateToDelete(project.ID))" value="Delete" /></td>
-            </tr>
+                <tr>
+                    <td @onclick="@(e => NavigateToDetails(project.ID))">@project.Name</td>
+                    @if (project.Niche != null)
+                    {
+                        <td>@project.Niche.Name</td>
+                    }
+                    else
+                    {
+                        <td>None</td>
+                    }
+                    @if (project.Group != null)
+                    {
+                        <td>@project.Group.Name</td>
+                    }
+                    else
+                    {
+                        <td>None</td>
+                    }
+                    @if (project.Content != null)
+                    {
+                        <td @onclick="@(e => NavigateToWordpressDetails(project.Content.ID))">@project.Content.TypeName</td>
+                    }
+                    else
+                    {
+                        <td>None</td>
+                    }
+                    <td>@project.DateAdded</td>
+                    @if (project.Frequency != null)
+                    {
+                        <td>@project.Frequency</td>
+                    }
+                    else
+                    {
+                        <td>None</td>
+                    }
+                    @if (project.LastPushed != null)
+                    {
+                        <td>@project.LastPushed</td>
+                    }
+                    else
+                    {
+                        <td>None</td>
+                    }
+                    @if (project.WasSuccess.HasValue)
+                    {
+                        <td>@(project.WasSuccess.Value ? "Success" : "Failed")</td>
+                    }
+                    else
+                    {
+                        <td>None</td>
+                    }
+                    @if (project.Active)
+                    {
+                        <td>Active</td>
+                    }
+                    else
+                    {
+                        <td>Disabled</td>
+                    }
+                    <td><input type="button" class="btn btn-primary" @onclick="@(e => NavigateToEdit(project.ID))" value="Edit" /></td>
+                    <td><input type="button" class="btn btn-danger" @onclick="@(e => NavigateToDelete(project.ID))" value="Delete" /></td>
+                </tr>
             }
         </tbody>
     </table>
 }
+@{
+    var prevDisabled = !viewModel.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !viewModel.HasNextPage ? "disabled" : "";
+}
+<div>
+    <button class="btn btn-primary @prevDisabled" @onclick="PreviousPage">
+        Previous
+    </button>
+    <button class="btn btn-primary @nextDisabled" @onclick="NextPage">
+        Next
+    </button>
+</div> 
+<div><p> </p></div>
 <div>
     <button class="btn btn-primary" @onclick="NavigateToAdd">
         Add Project
@@ -149,9 +165,14 @@ else
 
     ProjectsViewModel viewModel = new ProjectsViewModel();
 
+    int projectsCount;
+    int pageSize = 20;
+
     protected override async Task OnInitializedAsync()
     {
-        projects = await projectsService.GetAsync();
+        projectsCount = await projectsService.CountAsync();
+        viewModel = new ProjectsViewModel(projectsCount, pageSize);
+        projects = await projectsService.GetAsync(pageSize: pageSize);
         groups = await groupsService.GetAsync();
         if (groups == null) groups = new List<Group>();
     }
@@ -181,6 +202,7 @@ else
     private async Task OnWasSuccessChange(ChangeEventArgs args)
     {
         viewModel.Filters.WasSuccess = (string)args.Value;
+        await FilterChange();
 
         await ViewChange();
     }
@@ -188,24 +210,55 @@ else
     private async Task OnActiveChange(ChangeEventArgs args)
     {
         viewModel.Filters.Active = (string)args.Value;
+        await FilterChange();
 
         await ViewChange();
     }
     private async Task OnGroupChange(ChangeEventArgs args)
     {
         viewModel.Filters.GroupId = (string)args.Value;
+        await FilterChange();
 
         await ViewChange();
     }
 
+    private async Task PreviousPage()
+    {
+        if (viewModel.HasPreviousPage)
+        {
+            viewModel.PageIndex = viewModel.PageIndex - 1;
+            await ViewChange();
+        }
+    }
+    private async Task NextPage()
+    {
+        if (viewModel.HasNextPage)
+        {
+            viewModel.PageIndex = viewModel.PageIndex + 1;
+            await ViewChange();
+        }
+    }
+
+    private async Task FilterChange()
+    {
+        viewModel.PageIndex = 1;
+        projectsCount = await projectsService.CountAsync(
+                wasSuccess: viewModel.Filters.GetWasSuccess(),
+                active: viewModel.Filters.GetActive(),
+                groupId: viewModel.Filters.GetGroupId());
+        viewModel.ChangeCount(projectsCount);
+    }
+
     private async Task ViewChange()
     {
-        Console.WriteLine("WasSuccess: {0} | Active: {1} | Group: {2}", viewModel.Filters.WasSuccess, viewModel.Filters.Active,viewModel.Filters.GroupId);
+        Console.WriteLine("WasSuccess: {0} | Active: {1} | Group: {2}", viewModel.Filters.WasSuccess, viewModel.Filters.Active, viewModel.Filters.GroupId);
 
         projects = await projectsService.GetAsync(
                 wasSuccess: viewModel.Filters.GetWasSuccess(),
                 active: viewModel.Filters.GetActive(),
-                groupId: viewModel.Filters.GetGroupId());
+                groupId: viewModel.Filters.GetGroupId(),
+                pageIndex: viewModel.PageIndex,
+                pageSize: viewModel.PageSize);
 
         StateHasChanged();
     }

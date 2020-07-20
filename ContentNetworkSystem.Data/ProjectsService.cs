@@ -9,11 +9,12 @@ namespace ContentNetworkSystem.Data
 {
     public interface IProjectsService
     {
-        Task<List<Project>> GetAsync(bool? wasSuccess = null, bool? active = null, int? groupId = null);
+        Task<List<Project>> GetAsync(bool? wasSuccess = null, bool? active = null, int? groupId = null, int pageIndex = 1, int pageSize = 20);
         Task<Project> GetAsync(int projectId);
         Task<Project> AddAsync(Project project);
         Task<Project> UpdateAsync(Project project);
         Task DeleteAsync(Project project);
+        Task<int> CountAsync(bool? wasSuccess = null, bool? active = null, int? groupId = null);
     }
     public class ProjectsService : IProjectsService
     {
@@ -44,7 +45,7 @@ namespace ContentNetworkSystem.Data
             
         }
 
-        public async Task<List<Project>> GetAsync(bool? wasSuccess=null,bool? active=null, int? groupId = null)
+        public async Task<List<Project>> GetAsync(bool? wasSuccess=null,bool? active=null, int? groupId = null, int pageIndex = 1, int pageSize = 20)
         {
             //var projects = await _context.Projects.ToListAsync();
             //var projects =  _context.Projects;
@@ -56,6 +57,8 @@ namespace ContentNetworkSystem.Data
             if (wasSuccess.HasValue) projectsQuery = projectsQuery.Where(e => e.WasSuccess == wasSuccess.Value);
             if (active.HasValue) projectsQuery = projectsQuery.Where(e => e.Active == active.Value);
             if (groupId.HasValue) projectsQuery = projectsQuery.Where(e => e.GroupId == groupId.Value);
+            projectsQuery = projectsQuery.Skip((pageIndex - 1) * pageSize);
+            projectsQuery = projectsQuery.Take(pageSize);
 
             var projects = await projectsQuery.ToListAsync();
 
@@ -99,6 +102,16 @@ namespace ContentNetworkSystem.Data
             _context.Entry(project).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return project;
+        }
+        public async Task<int> CountAsync(bool? wasSuccess = null, bool? active = null, int? groupId = null)
+        {
+            var projectsQuery = from m in _context.Projects select m;
+
+            if (wasSuccess.HasValue) projectsQuery = projectsQuery.Where(e => e.WasSuccess == wasSuccess.Value);
+            if (active.HasValue) projectsQuery = projectsQuery.Where(e => e.Active == active.Value);
+            if (groupId.HasValue) projectsQuery = projectsQuery.Where(e => e.GroupId == groupId.Value);
+
+            return await projectsQuery.CountAsync();
         }
     }
 }

@@ -7,8 +7,42 @@ namespace ContentNetworkSystem.Models.ViewModels
 {
     public class ProjectsViewModel
     {
+        public int PageIndex { get; set; }
+        public int PageSize { get; set; }
+        public int TotalPages { get; private set; }
         public Filters Filters { get; set; } = new Filters();
+         
+        public bool HasPreviousPage
+        {
+            get
+            {
+                return (PageIndex > 1);
+            }
+        }
 
+        public bool HasNextPage
+        {
+            get
+            {
+                return (PageIndex < TotalPages);
+            }
+        }
+
+        public ProjectsViewModel()
+        {
+
+        }
+        public ProjectsViewModel(int count, int pageSize)
+        {
+            PageIndex = 1;
+            PageSize = pageSize;
+            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+        } 
+
+        public void ChangeCount(int count)
+        {
+            TotalPages = (int)Math.Ceiling(count / (double)PageSize);
+        }
     }
     public class Filters
     {
