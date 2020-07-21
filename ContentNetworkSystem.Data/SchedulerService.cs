@@ -41,23 +41,25 @@ namespace ContentNetworkSystem.Data
 
             try
             {
-                var projects = await _projectsService.GetAsync();
-                foreach (var project in projects)
+                var projectsLite = await _projectsService.GetLiteAsync();
+                foreach (var projectLite in projectsLite)
                 {
-                    if(!project.Active)
+                    if(!projectLite.Active)
                     {
                         continue;
                     }
                     var currDate = DateTime.UtcNow;
-                    var lastPushed = project.LastPushed;
+                    var lastPushed = projectLite.LastPushed;
                     if(lastPushed == null)
                     {
                         lastPushed = DateTime.MinValue;
                     }
-                    var frequency = project.Frequency;
+                    var frequency = projectLite.Frequency;
 
                     if ((lastPushed + frequency) < currDate)
                     {
+                        _logger.LogInformation("Processing Project - ({0}) {1}.", projectLite.ID, projectLite.Name);
+                        var project = await _projectsService.GetAsync(projectLite.ID);
                         var content = project.Content;
                         project.WasSuccess = true;
                         try
@@ -80,6 +82,7 @@ namespace ContentNetworkSystem.Data
             }
 
             await UnlockAsync();
+            _logger.LogInformation("Processing Projects - Finished.");
         }
         
         /// <summary>

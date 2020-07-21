@@ -9,6 +9,7 @@ namespace ContentNetworkSystem.Data
 {
     public interface IProjectsService
     {
+        Task<List<Project>> GetLiteAsync();
         Task<List<Project>> GetAsync(bool? wasSuccess = null, bool? active = null, int? groupId = null, int pageIndex = 1, int? pageSize = null);
         Task<Project> GetAsync(int projectId);
         Task<Project> AddAsync(Project project);
@@ -44,7 +45,10 @@ namespace ContentNetworkSystem.Data
              await _context.SaveChangesAsync();
             
         }
-
+        public async Task<List<Project>> GetLiteAsync()
+        {
+            return await _context.Projects.ToListAsync();
+        }
         public async Task<List<Project>> GetAsync(bool? wasSuccess=null,bool? active=null, int? groupId = null, int pageIndex = 1, int? pageSize = null)
         {
             //var projects = await _context.Projects.ToListAsync();
@@ -70,12 +74,6 @@ namespace ContentNetworkSystem.Data
                 await _context.Entry(project).Reference(e => e.Content).LoadAsync();
                 await _context.Entry(project).Reference(e => e.Group).LoadAsync();
                 await _context.Entry(project).Reference(e => e.Niche).LoadAsync();
-                if (project.Niche!=null)
-                {
-                    await _context.Entry(project.Niche).Collection(e => e.Keywords).LoadAsync();
-                    await _context.Entry(project.Niche).Collection(e => e.YoutubeResults).LoadAsync();
-                    await _context.Entry(project.Niche).Collection(e => e.ImagesResults).LoadAsync();
-                }
             }
             return projects;
         }
