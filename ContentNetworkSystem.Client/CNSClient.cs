@@ -62,7 +62,11 @@ namespace ContentNetworkSystem.Client
 
         public T Get<T>()
         {
-            T obj = default;
+            return Get<T, T>();
+        }
+        public U Get<U, T>()
+        {
+            U obj = default;
             try
             {
                 using (var client = new HttpClient())
@@ -80,7 +84,7 @@ namespace ContentNetworkSystem.Client
                             //ContractResolver = new CamelCasePropertyNamesContractResolver(),
                             // SerializationBinder = new MyCustomSerializationBinder()
                         };
-                        obj = JsonConvert.DeserializeObject<T>(respJson, settings);
+                        obj = JsonConvert.DeserializeObject<U>(respJson, settings);
                         //obj = await response.Content.ReadAsAsync<T>().GetAwaiter().GetResult();
                     }
                 }
@@ -91,9 +95,48 @@ namespace ContentNetworkSystem.Client
             }
             return obj;
         }
+        public T Get<T>(string functionName, string param = "", bool auth = true)
+        {
+            return Get<T, T>(functionName, param, auth);
+        }
+        public U Get<U, T>(string functionName, string param="", bool auth=true)
+        {
+            U obj = default;
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    if (auth)
+                    {
+                        var token = Authorize();
+                        client.SetBearerToken(token.AccessToken);
+                    }
+                    HttpResponseMessage response = client.GetAsync(Host + "/api/" + typeof(T).Name + "s/"+functionName+"/"+param).GetAwaiter().GetResult();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string respJson = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                        JsonSerializerSettings settings = new JsonSerializerSettings
+                        {
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                            TypeNameHandling = TypeNameHandling.Objects
+                        };
+                        obj = JsonConvert.DeserializeObject<U>(respJson, settings);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                LastError = e.ToString();
+            }
+            return obj;
+        }
         public T Get<T>(int id)
         {
-            T obj = default;
+            return Get<T, T>(id);
+        }
+        public U Get<U, T>(int id)
+        {
+            U obj = default;
             try
             {
                 using (var client = new HttpClient())
@@ -109,7 +152,7 @@ namespace ContentNetworkSystem.Client
                             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                             TypeNameHandling = TypeNameHandling.Objects
                         };
-                        obj = JsonConvert.DeserializeObject<T>(respJson, settings);
+                        obj = JsonConvert.DeserializeObject<U>(respJson, settings);
                     }
                 }
             }
@@ -121,7 +164,11 @@ namespace ContentNetworkSystem.Client
         }
         public T Get<T>(int id, string functionName)
         {
-            T obj = default;
+            return Get<T, T>(id, functionName);
+        }
+        public U Get<U, T>(int id, string functionName)
+        {
+            U obj = default;
             try
             {
                 using (var client = new HttpClient())
@@ -137,7 +184,7 @@ namespace ContentNetworkSystem.Client
                             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                             TypeNameHandling = TypeNameHandling.Objects
                         };
-                        obj = JsonConvert.DeserializeObject<T>(respJson, settings);
+                        obj = JsonConvert.DeserializeObject<U>(respJson, settings);
                     }
                 }
             }

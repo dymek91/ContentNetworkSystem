@@ -23,6 +23,13 @@ namespace ContentNetworkSystem.Controllers
             return Ok( await nichesService.GetAsync());
         }
 
+        // GET: api/<NichesController>/ByTextGenerationLowQCategoryId/12
+        [HttpGet("ByTextGenerationLowQCategoryId/{categoryId}")]
+        public async Task<ActionResult> GetByTextGenerationLowQCategoryId(int categoryId, [FromServices] INichesService nichesService)
+        {
+            return Ok(await nichesService.GetAsync(textGenerationLowQCategoryId: categoryId));
+        }
+
         // GET api/<NichesController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id, [FromServices] INichesService nichesService)

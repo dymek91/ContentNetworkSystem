@@ -9,7 +9,7 @@ namespace ContentNetworkSystem.Data
 {
     public interface INichesService
     {
-        Task<List<Niche>> GetAsync();
+        Task<List<Niche>> GetAsync(int? textGenerationCategoryId = null, int? textGenerationLowQCategoryId = null);
         Task<Niche> GetAsync(int nicheId);
         Task<Niche> AddAsync(Niche niche);
         Task<Niche> UpdateAsync(Niche niche);
@@ -39,9 +39,15 @@ namespace ContentNetworkSystem.Data
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Niche>> GetAsync()
+        public async Task<List<Niche>> GetAsync(int? textGenerationCategoryId = null, int? textGenerationLowQCategoryId = null)
         {
-            var niches = await _context.Niches.ToListAsync();
+            var nichesQuery = from m in _context.Niches select m;
+
+            if (textGenerationCategoryId.HasValue) nichesQuery = nichesQuery.Where(e => e.TextGenerationCategoryId == textGenerationCategoryId);
+            if (textGenerationLowQCategoryId.HasValue) nichesQuery = nichesQuery.Where(e=>e.TextGenerationLowQCategoryId == textGenerationLowQCategoryId);
+
+            var niches = await nichesQuery.ToListAsync();
+
             foreach (var niche in niches)
             {
                 await _context.Entry(niche).Collection(e => e.Keywords).LoadAsync();
