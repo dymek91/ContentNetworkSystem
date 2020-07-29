@@ -138,6 +138,31 @@ namespace ContentNetworkSystem.ModelsExtensions
                 }
             }
 
+            //REFRESH CACHE
+            RefreshCache(wordpress.Url);
+            string postUrl = wordpressService.GetPostUrl(
+                user: wordpress.Username,
+                pass: password,
+                baseUrl: wordpress.Url,
+                blogId: blogId,
+                postId: postId);
+            if (postUrl.Length > 0) RefreshCache(postUrl);
+
+        }
+
+        private static void RefreshCache(string url)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.GetAsync(url).GetAwaiter().GetResult();
+                }
+            }
+            catch(Exception e)
+            {
+
+            }
         }
 
         private static int GetCountFromMask(string countMask)

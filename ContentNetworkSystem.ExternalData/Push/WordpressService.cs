@@ -142,6 +142,29 @@ namespace ContentNetworkSystem.Push
             return success;
         }
 
+        public string GetPostUrl(string user, string pass, string baseUrl, int blogId, string postId)
+        {
+            string postUrl = "";
+            var config = new WordPressSiteConfig
+            {
+                BaseUrl = baseUrl,
+                BlogId = blogId,
+                Username = user,
+                Password = pass
+            };
+
+            using (var client = new WordPressClient(config))
+            {
+                var post = client.GetPost(int.Parse(postId));
+                if(post!=null)
+                {
+                    postUrl = post.Link;
+                }
+            }
+
+            return postUrl;
+        }
+
         private string FixFileName(string fileName)
         {
             fileName = fileName.Split('?')[0];
