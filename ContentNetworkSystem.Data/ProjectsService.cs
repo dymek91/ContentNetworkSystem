@@ -12,6 +12,7 @@ namespace ContentNetworkSystem.Data
         Task<List<Project>> GetLiteAsync();
         Task<List<Project>> GetAsync(bool? wasSuccess = null, bool? active = null, int? groupId = null, int pageIndex = 1, int? pageSize = null);
         Task<Project> GetAsync(int projectId);
+        Task<Project> GetAsync(int projectId, bool getContent, bool getGroup, bool getNiche, bool getNicheDeep);
         Task<Project> AddAsync(Project project);
         Task<Project> UpdateAsync(Project project);
         Task DeleteAsync(Project project);
@@ -93,6 +94,29 @@ namespace ContentNetworkSystem.Data
                 await _context.Entry(project.Niche).Collection(e => e.Keywords).LoadAsync();
                 await _context.Entry(project.Niche).Collection(e => e.YoutubeResults).LoadAsync();
                 await _context.Entry(project.Niche).Collection(e => e.ImagesResults).LoadAsync();
+            }
+
+            return project;
+        }
+
+        public async Task<Project> GetAsync(int projectId, bool getContent, bool getGroup, bool getNiche, bool getNicheDeep)
+        {
+            var project = await _context.Projects.FindAsync(projectId);
+            if (project == null)
+            {
+                return null;
+            }
+            if (getContent) await _context.Entry(project).Reference(e => e.Content).LoadAsync();
+            if (getGroup) await _context.Entry(project).Reference(e => e.Group).LoadAsync();
+            if (getNiche)
+            {
+                await _context.Entry(project).Reference(e => e.Niche).LoadAsync();
+                if (project.Niche != null && getNicheDeep)
+                {
+                    await _context.Entry(project.Niche).Collection(e => e.Keywords).LoadAsync();
+                    await _context.Entry(project.Niche).Collection(e => e.YoutubeResults).LoadAsync();
+                    await _context.Entry(project.Niche).Collection(e => e.ImagesResults).LoadAsync();
+                }
             }
 
             return project;

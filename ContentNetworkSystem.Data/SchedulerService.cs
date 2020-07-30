@@ -75,6 +75,29 @@ namespace ContentNetworkSystem.Data
                         await _projectsService.UpdateAsync(project);
                     }
                 }
+
+                //RUN WORDPRESSES CRONS
+                //run every 10min
+                if (DateTime.Now.Minute % 10 == 0)
+                {
+                    _logger.LogInformation("Processing Projects - Running Wordpresses Crons.");
+                    foreach (var projectLite in projectsLite)
+                    {
+                        if(projectLite.Active)
+                        {
+                            var project = await _projectsService.GetAsync(projectLite.ID,getContent:true,getGroup:false,getNiche:false,getNicheDeep:false);
+                            if (project.Content != null)
+                            {
+                                var content = project.Content;
+                                if (content.TypeName == "Wordpress")
+                                {
+                                    await RunWordpressCron(content.Url + "wp-cron.php");
+                                }
+                            }
+                        }
+                    }
+                    _logger.LogInformation("Processing Projects - Running Wordpresses Crons - Finished.");
+                }
             }
             catch(Exception e)
             {
@@ -107,6 +130,23 @@ namespace ContentNetworkSystem.Data
             await _context.Schedulers.UpdateAsync(t => new Scheduler() { RequestId = null });
 
             return true;
+        }
+
+        async Task RunWordpressCron(string url)
+        {
+            using (var client = new HttpClient())
+            {
+                client.Timeout = TimeSpan.FromSeconds(10);
+                try
+                {
+                    await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+                }
+                catch(Exception e)
+                {
+                    _logger.LogError("{0} - {1}",url, e);
+                }
+
+            }
         }
     }
 }
