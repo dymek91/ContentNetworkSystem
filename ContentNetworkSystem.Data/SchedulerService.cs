@@ -78,7 +78,7 @@ namespace ContentNetworkSystem.Data
 
                 //RUN WORDPRESSES CRONS
                 //run every 10min
-                if (DateTime.Now.Minute % 10 == 0)
+                if (DateTime.Now.Minute % 13 == 0)
                 {
                     _logger.LogInformation("Processing Projects - Running Wordpresses Crons.");
                     foreach (var projectLite in projectsLite)
