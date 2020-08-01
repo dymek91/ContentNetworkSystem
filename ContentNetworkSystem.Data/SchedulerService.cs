@@ -137,7 +137,7 @@ namespace ContentNetworkSystem.Data
         {
             using (var client = new HttpClient())
             {
-                client.Timeout = TimeSpan.FromSeconds(10);
+                client.Timeout = TimeSpan.FromSeconds(30);
                 try
                 {
                     await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
