@@ -92,6 +92,7 @@ namespace ContentNetworkSystem.Data
                                 if (content.TypeName == "Wordpress")
                                 {
                                     await RunWordpressCron(content.Url + "wp-cron.php");
+                                    await Task.Delay(100);
                                 }
                             }
                         }
