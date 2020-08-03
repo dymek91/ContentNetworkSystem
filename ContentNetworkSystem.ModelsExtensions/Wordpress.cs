@@ -64,15 +64,6 @@ namespace ContentNetworkSystem.ModelsExtensions
             string postContent= System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(textJSON.Text));
             string password = encryptionService.DecryptString(wordpress.Password);
 
-            //ADD KEYWORDS TO TEXT AND TITLE
-            string titleKeyword = wordpress.Project.Niche.Keywords.OrderBy(e => Guid.NewGuid()).First().Name;
-            titleKeyword = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(titleKeyword);
-            string textKeywords = String.Join(", ", wordpress.Project.Niche.Keywords.OrderBy(e => Guid.NewGuid()).Take(5).Select(e => e.Name));
-            postTitle = postTitle + " - " + titleKeyword;
-            postContent = postContent + @"
-
-" + textKeywords;
-
             //ADD AUTHORITY LINKS
             int authorityLinksToAdd = GetCountFromMask(wordpress.AuthorityLinksCount);
             if (authorityLinksToAdd > 0)
@@ -106,6 +97,15 @@ namespace ContentNetworkSystem.ModelsExtensions
             {
                 postContent = await randomContentService.InsertImagesToText(wordpress.Project.Niche, postContent, imagesToAdd);
             }
+
+            //ADD KEYWORDS TO TEXT AND TITLE
+            string titleKeyword = wordpress.Project.Niche.Keywords.OrderBy(e => Guid.NewGuid()).First().Name;
+            titleKeyword = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(titleKeyword);
+            string textKeywords = String.Join(", ", wordpress.Project.Niche.Keywords.OrderBy(e => Guid.NewGuid()).Take(5).Select(e => e.Name));
+            postTitle = postTitle + " - " + titleKeyword;
+            postContent = postContent + @"
+
+" + textKeywords;
 
             //SEND POST
             var postId = wordpressService.PushPost(
