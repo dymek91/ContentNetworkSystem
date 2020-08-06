@@ -10,6 +10,7 @@ using Z.EntityFramework.Plus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
 using ContentNetworkSystem.ModelsExtensions;
+using System.Security.Policy;
 
 namespace ContentNetworkSystem.Data
 {
@@ -77,10 +78,11 @@ namespace ContentNetworkSystem.Data
                 }
 
                 //RUN WORDPRESSES CRONS
-                //run every 10min
+                //run every 3h
                 if ((DateTime.Now.Hour % 3 == 0) && (DateTime.Now.Minute == 4))
                 {
                     _logger.LogInformation("Processing Projects - Running Wordpresses Crons.");
+                    HashSet<string> wordpressesMultisite = new HashSet<string>();
                     foreach (var projectLite in projectsLite)
                     {
                         if(projectLite.Active)
@@ -92,10 +94,28 @@ namespace ContentNetworkSystem.Data
                                 if (content.TypeName == "Wordpress")
                                 {
                                     await RunWordpressCron(content.Url + "wp-cron.php");
+                                    try
+                                    {
+                                        Uri wordpressUrl = new Uri(content.Url);
+                                        if (wordpressUrl.AbsolutePath.Length > 1)
+                                        {
+                                            //workaround to push also cron on main blog on multisite network
+                                            wordpressesMultisite.Add(wordpressUrl.GetLeftPart(UriPartial.Authority));
+                                        }
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        _logger.LogError("{0}", e);
+                                    }
                                     await Task.Delay(100);
                                 }
                             }
                         }
+                    }
+                    foreach(var wordpressMultisite in wordpressesMultisite)
+                    {
+                        await RunWordpressCron(wordpressMultisite + "/wp-cron.php");
+                        await Task.Delay(100);
                     }
                     _logger.LogInformation("Processing Projects - Running Wordpresses Crons - Finished.");
                 }
