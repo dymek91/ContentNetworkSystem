@@ -74,7 +74,15 @@ namespace ContentNetworkSystem.Pull
         {
             var rand = new Random();
 
-            var imagesService = _serviceProvider.GetService<GoogleImagesService>();
+            var googleImagesService = _serviceProvider.GetService<GoogleImagesService>();
+            var bingImagesService = _serviceProvider.GetService<BingImagesService>();
+             
+            List<IImagesService> imagesServices = new List<IImagesService>
+            {
+                googleImagesService,
+                bingImagesService
+            };
+            IImagesService imagesService = imagesServices[rand.Next(0, imagesServices.Count)];
 
             var googleImages = await imagesService.SearchImages_Api(niche, imagesToAdd);
             if (googleImages.Count() == 0)

@@ -15,7 +15,7 @@ using ContentNetworkSystem.Data.GoogleSearchCache;
 
 namespace ContentNetworkSystem.Pull
 {
-    public class GoogleImagesService
+    public class GoogleImagesService : IImagesService
     {
         private readonly IHttpClientFactory _clientFactory;
         private IConfiguration Configuration { get; }  

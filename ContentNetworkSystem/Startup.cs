@@ -115,6 +115,7 @@ namespace ContentNetworkSystem
             services.AddTransient<TextGenerationService>();
             services.AddTransient<YouTubeService>();
             services.AddTransient<GoogleImagesService>();
+            services.AddTransient<BingImagesService>();
             services.AddTransient<RandomContentService>();
         }
 

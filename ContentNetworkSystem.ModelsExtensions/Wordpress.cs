@@ -48,6 +48,8 @@ namespace ContentNetworkSystem.ModelsExtensions
         { 
             Console.WriteLine("Pushing wordpress content");
 
+            var rand = new Random();
+
             //Wordpress wordpress = (Wordpress)wordpressCon;
 
             int blogId = 1;
@@ -57,7 +59,15 @@ namespace ContentNetworkSystem.ModelsExtensions
             var textGenerationService = serviceProvider.GetService<TextGenerationService>();
             var encryptionService = serviceProvider.GetService<EncryptionService>();
             var googleImagesService = serviceProvider.GetService<GoogleImagesService>();
+            var bingImagesService = serviceProvider.GetService<BingImagesService>();
             var randomContentService = serviceProvider.GetService<RandomContentService>();
+
+            List<IImagesService> imagesServices = new List<IImagesService>
+            {
+                googleImagesService,
+                bingImagesService
+            };
+            IImagesService imagesService = imagesServices[rand.Next(0,imagesServices.Count)];
 
             TextJSON textJSON = await textGenerationService.GetText(wordpress.TextGenerationCategoryId.Value);
             string postTitle = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(textJSON.SuggestedTitle));  
@@ -121,7 +131,7 @@ namespace ContentNetworkSystem.ModelsExtensions
             {
                 if(wordpress.AddThumbnail.Value)
                 {
-                    var images = await googleImagesService.SearchImages_Api(wordpress.Project.Niche, 1);
+                    var images = await imagesService.SearchImages_Api(wordpress.Project.Niche, 1);
                     if (images.Count>0)
                     {
                         var imageThumbnail = images[0];
