@@ -48,11 +48,15 @@ namespace ContentNetworkSystem.Data
 
             var niches = await nichesQuery.ToListAsync();
 
-            foreach (var niche in niches)
+            if (textGenerationCategoryId.HasValue || textGenerationLowQCategoryId.HasValue)
             {
-                await _context.Entry(niche).Collection(e => e.Keywords).LoadAsync();
-                await _context.Entry(niche).Collection(e => e.Projects).LoadAsync();
+                foreach (var niche in niches)
+                {
+                    await _context.Entry(niche).Collection(e => e.Keywords).LoadAsync();
+                    await _context.Entry(niche).Collection(e => e.Projects).LoadAsync();
+                }
             }
+
             return niches;
         }
 

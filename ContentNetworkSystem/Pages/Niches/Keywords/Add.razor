@@ -53,6 +53,7 @@ else
     private async Task HandleValidSubmitAsync()
     {
         Console.WriteLine("OnValidSubmit");
+        Queue<Keyword> keywordsToAdd = new Queue<Keyword>();
         foreach (var keywordStr in textAreaModel.GetLines())
         {
             Keyword keyword = new Keyword()
@@ -60,8 +61,27 @@ else
                 NicheId = NicheId,
                 Name = keywordStr
             };
-            await keywordsService.AddAsync(keyword);
+            //await keywordsService.AddAsync(keyword);
+            keywordsToAdd.Enqueue(keyword);
         }
+
+        int batchSize = 100;
+        HashSet<Keyword> keywordsBatch = new HashSet<Keyword>();
+        Keyword keywordTemp = new Keyword();
+        while(keywordsToAdd.TryDequeue(out keywordTemp))
+        {
+            keywordsBatch.Add(keywordTemp);
+            if(keywordsBatch.Count == batchSize)
+            {
+                await keywordsService.AddRangeAsync(keywordsBatch, NicheId);
+                keywordsBatch.Clear();
+            }
+        }
+        if(keywordsBatch.Count > 0)
+        {
+            await keywordsService.AddRangeAsync(keywordsBatch, NicheId);
+        }
+
         NavigationManager.NavigateTo("Niches/Edit/" + NicheId);
     }
 

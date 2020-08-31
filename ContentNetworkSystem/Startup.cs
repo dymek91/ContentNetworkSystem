@@ -93,7 +93,8 @@ namespace ContentNetworkSystem
                       options.SerializerSettings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
                       //options.SerializerSettings.SerializationBinder = new MyCustomSerializationBinder();
                    });
-            services.AddServerSideBlazor();
+            services.AddServerSideBlazor().AddHubOptions(
+                    options => { options.MaximumReceiveMessageSize = 512*1024; });
             services.AddSingleton<WeatherForecastService>(); 
             services.AddHttpClient();
 
