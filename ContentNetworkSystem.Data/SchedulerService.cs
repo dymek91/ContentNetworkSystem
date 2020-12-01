@@ -79,7 +79,8 @@ namespace ContentNetworkSystem.Data
 
                 //RUN WORDPRESSES CRONS
                 //run every 3h
-                if ((DateTime.Now.Hour % 3 == 0) && (DateTime.Now.Minute == 4))
+                bool runWpCrons = false;
+                if (runWpCrons && (DateTime.Now.Hour % 3 == 0) && (DateTime.Now.Minute == 4))
                 {
                     _logger.LogInformation("Processing Projects - Running Wordpresses Crons.");
                     HashSet<string> wordpressesMultisite = new HashSet<string>();
