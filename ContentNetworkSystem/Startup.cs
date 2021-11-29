@@ -40,7 +40,7 @@ namespace ContentNetworkSystem
         {
             services.AddGoogleExceptionLogging(options =>
             {
-                options.ProjectId = "dymekapps";
+                options.ProjectId = Configuration.GetValue<string>("GoogleProjectId");
                 options.ServiceName = "ContentNetworkSystem";
                 options.Version = "0.01";
                 //  options.Options = errorOptions; 
@@ -60,7 +60,7 @@ namespace ContentNetworkSystem
                     options.RequireHttpsMetadata = false;
 
                     options.ClientId = "CNS";
-                    options.ClientSecret = "7FAEB0A9-301F-4425-ADFE-85062F8D419F";
+                    options.ClientSecret = Configuration.GetValue<string>("ClientSecret");
                     options.ResponseType = "code";
 
                     options.SaveTokens = true;
@@ -142,7 +142,7 @@ namespace ContentNetworkSystem
             // Configure logging service.
             LoggerOptions loggerOptions = LoggerOptions.Create(logName: "ContentNetworkSystem");
 
-            loggerFactory.AddGoogle(app.ApplicationServices, "dymekapps", loggerOptions);
+            loggerFactory.AddGoogle(app.ApplicationServices, Configuration.GetValue<string>("GoogleProjectId"), loggerOptions);
 
             app.UseGoogleExceptionLogging();
 

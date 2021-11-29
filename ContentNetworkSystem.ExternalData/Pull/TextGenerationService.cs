@@ -62,7 +62,7 @@ Phasellus eu ligula eget neque mattis vulputate.Sed nec ullamcorper justo.Vivamu
                 {
                     Address = disco.TokenEndpoint,
                     ClientId = "CNS",
-                    ClientSecret = "7FAEB0A9-301F-4425-ADFE-85062F8D419F",
+                    ClientSecret = Configuration.GetValue<string>("ClientSecret"),
 
                     Scope = "apiTextGeneration"
                 });

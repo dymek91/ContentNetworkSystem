@@ -5,16 +5,19 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace ContentNetworkSystem
 {
     public class EncryptionService
     {
-        private string keyString = "W123C8DF278RT5931069B522E611D4F2";
+        private string keyString = "";
+        private IConfiguration Configuration { get; }
 
-        public EncryptionService()
+        public EncryptionService(IConfiguration configuration)
         {
-
+            Configuration = configuration;
+            keyString = Configuration.GetValue<string>("EncryptionKeyString");
         }
 
         public string EncryptString(string text)
